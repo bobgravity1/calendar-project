@@ -1,0 +1,15 @@
+import { forwardRef, type ButtonHTMLAttributes } from "react"
+
+type RainbowButtonProps = ButtonHTMLAttributes<HTMLButtonElement>
+
+const RainbowButton = forwardRef<HTMLButtonElement, RainbowButtonProps>(
+  ({ className = "", children, ...props }, ref) => (
+    <button ref={ref} className={`blue-orbit-button w-60 ${className}`} {...props}>
+      <span>{children}</span>
+    </button>
+  )
+)
+
+RainbowButton.displayName = "RainbowButton"
+
+export { RainbowButton, type RainbowButtonProps }

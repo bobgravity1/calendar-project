@@ -1,0 +1,262 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/jetbrains-mono";
+@import "@fontsource/poppins/400.css";
+@import "@fontsource/poppins/500.css";
+@import "@fontsource/poppins/600.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* A restrained blue highlight that travels around the button's edge. */
+.blue-orbit-button {
+    position: relative;
+    display: inline-flex;
+    min-height: 2.5rem;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 0;
+    border-radius: 0.625rem;
+    padding: 3px;
+    background: oklch(0.52 0.18 255 / 35%);
+    color: white;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    isolation: isolate;
+    box-shadow: 0 7px 22px oklch(0.42 0.18 255 / 28%);
+    transition: box-shadow 180ms ease, transform 180ms ease;
+}
+
+.blue-orbit-button::before {
+    content: "";
+    position: absolute;
+    z-index: -2;
+    width: 160%;
+    aspect-ratio: 1;
+    background: conic-gradient(from 0deg,
+            transparent 0deg 285deg,
+            oklch(0.7 0.16 245 / 60%) 315deg,
+            oklch(0.98 0.025 235 / 100%) 340deg,
+            transparent 360deg);
+    animation: blue-orbit 4.5s linear infinite;
+}
+
+.blue-orbit-button::after {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    z-index: -1;
+    border-radius: calc(0.625rem - 3px);
+    background: var(--primary);
+}
+
+.blue-orbit-button>span {
+    padding: 0.55rem 1rem;
+}
+
+.blue-orbit-button:hover {
+    box-shadow: 0 7px 24px oklch(0.48 0.18 250 / 25%);
+    transform: translateY(-1px);
+}
+
+.blue-orbit-button:focus-visible {
+    outline: 2px solid oklch(0.82 0.11 240);
+    outline-offset: 2px;
+}
+
+.blue-orbit-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+@keyframes blue-orbit {
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .blue-orbit-button::before {
+        animation: none;
+    }
+}
+
+/* Frosted glass panels. Tints are tokens (--card / --glass-light) so they re-theme from :root. */
+@utility bg-glass-dark {
+    background-color: var(--card);
+    background-image: linear-gradient(135deg, oklch(1 0 0 / 10%), transparent 45%);
+    border: 1px solid var(--border);
+    box-shadow:
+        inset 0 1px 0 oklch(1 0 0 / 18%),
+        0 20px 40px oklch(0 0 0 / 25%);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    backdrop-filter: blur(24px) saturate(140%);
+}
+
+@utility bg-glass-light {
+    background-color: var(--glass-light);
+    background-image: linear-gradient(135deg, oklch(1 0 0 / 25%), transparent 50%);
+    border: 1px solid oklch(1 0 0 / 35%);
+    box-shadow:
+        inset 0 1px 0 oklch(1 0 0 / 50%),
+        0 20px 40px oklch(0 0 0 / 15%);
+    -webkit-backdrop-filter: blur(6px) saturate(105%);
+    backdrop-filter: blur(6px) saturate(105%);
+}
+
+/* Legibility lift for white text sitting on glass. */
+@utility text-glass {
+    color: var(--foreground);
+    text-shadow: 0 1px 2px oklch(0 0 0 / 35%);
+}
+
+@utility glass-item {
+    background: linear-gradient(to bottom right,
+            rgb(255 255 255 / 12%),
+            rgb(255 255 255 / 20%));
+    border: 0px solid rgb(255 255 255 / 20%);
+    box-shadow:
+        inset 0 1px 0 rgb(255 255 255 / 58%),
+        0 4px 12px rgb(0 0 0 / 10%);
+    -webkit-backdrop-filter: blur(6px) saturate(110%);
+    backdrop-filter: blur(6px) saturate(110%);
+}
+
+@theme inline {
+    --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+    --font-heading: var(--font-sans);
+    --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+    --color-sidebar-ring: var(--sidebar-ring);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar: var(--sidebar);
+    --color-chart-5: var(--chart-5);
+    --color-chart-4: var(--chart-4);
+    --color-chart-3: var(--chart-3);
+    --color-chart-2: var(--chart-2);
+    --color-chart-1: var(--chart-1);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+    /* Glass theme: dark canvas, white text, translucent surfaces. */
+    --background: oklch(0.17 0.02 275);
+    --foreground: oklch(0.985 0 0);
+    --card: oklch(0.2 0.02 275 / 55%);
+    --glass-light: oklch(1 0 0 / 18%);
+    --card-foreground: oklch(0.985 0 0);
+    --popover: oklch(0.2 0.02 275);
+    --popover-foreground: oklch(0.985 0 0);
+    --primary: oklch(0.16 0 0);
+    --primary-foreground: oklch(0.985 0 0);
+    --secondary: oklch(0.95 0.025 15);
+    --secondary-foreground: oklch(0.2 0 0);
+    --muted: oklch(1 0 0 / 10%);
+    --muted-foreground: oklch(0.8 0.01 275);
+    --accent: oklch(1 0 0 / 12%);
+    --accent-foreground: oklch(0.985 0 0);
+    --destructive: oklch(0.704 0.191 22.216);
+    --border: oklch(1 0 0 / 18%);
+    --input: oklch(1 0 0 / 15%);
+    --ring: oklch(0.708 0 0);
+    --chart-1: oklch(0.87 0 0);
+    --chart-2: oklch(0.556 0 0);
+    --chart-3: oklch(0.439 0 0);
+    --chart-4: oklch(0.371 0 0);
+    --chart-5: oklch(0.269 0 0);
+    --radius: 0.625rem;
+    --sidebar: oklch(0.2 0.02 275);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: oklch(0.16 0 0);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(1 0 0 / 12%);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(1 0 0 / 18%);
+    --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+    --background: oklch(0.145 0 0);
+    --foreground: oklch(0.985 0 0);
+    --card: oklch(0.205 0 0);
+    --card-foreground: oklch(0.985 0 0);
+    --popover: oklch(0.205 0 0);
+    --popover-foreground: oklch(0.985 0 0);
+    --primary: oklch(0.16 0 0);
+    --primary-foreground: oklch(0.985 0 0);
+    --secondary: oklch(0 0 0);
+    --secondary-foreground: oklch(0.985 0 0);
+    --muted: oklch(0.269 0 0);
+    --muted-foreground: oklch(0.708 0 0);
+    --accent: oklch(0.269 0 0);
+    --accent-foreground: oklch(0.985 0 0);
+    --destructive: oklch(0.704 0.191 22.216);
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 15%);
+    --ring: oklch(0.556 0 0);
+    --chart-1: oklch(0.87 0 0);
+    --chart-2: oklch(0.556 0 0);
+    --chart-3: oklch(0.439 0 0);
+    --chart-4: oklch(0.371 0 0);
+    --chart-5: oklch(0.269 0 0);
+    --sidebar: oklch(0.205 0 0);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.269 0 0);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+    }
+
+    /* Today's date: set aria-current="date" on the cell and it picks this up. */
+    [aria-current="date"] {
+        @apply bg-primary text-primary-foreground;
+    }
+
+    html {
+        @apply font-sans;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
