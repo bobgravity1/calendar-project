@@ -4,7 +4,7 @@ type RainbowButtonProps = ButtonHTMLAttributes<HTMLButtonElement>
 
 const RainbowButton = forwardRef<HTMLButtonElement, RainbowButtonProps>(
   ({ className = "", children, ...props }, ref) => (
-    <button ref={ref} className={`blue-orbit-button w-60 ${className}`} {...props}>
+    <button ref={ref} className={`blue-orbit-button ${className}`} {...props}>
       <span>{children}</span>
     </button>
   )

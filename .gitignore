@@ -17,6 +17,7 @@ dist-ssr
 
 # Private working notes and agent/session context
 notes/
+session-notes/
 NOTES.md
 .Codex/
 .codex/

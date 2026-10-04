@@ -17,10 +17,10 @@ interface ContainerProps extends React.PropsWithChildren {
 
 export const Container = ({ children, bgImage }: ContainerProps) => {
     return (
-        <div className='relative isolate'>
+        <div className='relative isolate flow-root min-h-screen'>
             <div
                 aria-hidden='true'
-                className='absolute inset-0 -z-10 bg-cover bg-center bg-no-repeat invert'
+                className='absolute top-0 inset-0 -z-10 bg-cover bg-center bg-no-repeat invert'
                 style={{ backgroundImage: `url(${bgImage})` }}
             />
             {children}

@@ -2,9 +2,8 @@
   "files": [],
   "compilerOptions": {
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"],
+      "@icons/*": ["./src/assets/icons/*"]
     }
   },
   "references": [

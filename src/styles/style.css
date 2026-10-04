@@ -8,39 +8,57 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@property --blue-orbit-angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+
+@property --blue-hover-ring-alpha {
+    syntax: "<number>";
+    initial-value: 0;
+    inherits: false;
+}
+
 /* A restrained blue highlight that travels around the button's edge. */
 .blue-orbit-button {
+    --blue-hover-ring-alpha: 0;
     position: relative;
     display: inline-flex;
-    min-height: 2.5rem;
     align-items: center;
     justify-content: center;
     overflow: hidden;
     border: 0;
     border-radius: 0.625rem;
-    padding: 3px;
-    background: oklch(0.52 0.18 255 / 35%);
+    background: transparent;
     color: white;
     font: inherit;
     font-size: 0.875rem;
-    font-weight: 500;
+    font-weight: 600;
+    letter-spacing: 0.05em;
     cursor: pointer;
     isolation: isolate;
     box-shadow: 0 7px 22px oklch(0.42 0.18 255 / 28%);
-    transition: box-shadow 180ms ease, transform 180ms ease;
+    transition: box-shadow 180ms ease, --blue-hover-ring-alpha 220ms ease;
 }
 
 .blue-orbit-button::before {
     content: "";
     position: absolute;
+    inset: 0;
     z-index: -2;
-    width: 160%;
-    aspect-ratio: 1;
-    background: conic-gradient(from 0deg,
+    padding: 2px;
+    border-radius: inherit;
+    background: conic-gradient(from var(--blue-orbit-angle),
             transparent 0deg 285deg,
             oklch(0.7 0.16 245 / 60%) 315deg,
             oklch(0.98 0.025 235 / 100%) 340deg,
             transparent 360deg);
+    -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
     animation: blue-orbit 4.5s linear infinite;
 }
 
@@ -50,16 +68,30 @@
     inset: 2px;
     z-index: -1;
     border-radius: calc(0.625rem - 3px);
-    background: var(--primary);
+    background-color: var(--glass-dark);
+    background-image:
+        radial-gradient(circle at center,
+            transparent 28%,
+            oklch(0.68 0.12 250 / var(--blue-hover-ring-alpha)) 48%,
+            transparent 68%),
+        linear-gradient(135deg, oklch(1 0 0 / 10%), transparent 45%);
+    box-shadow: inset 0 1px 0 oklch(1 0 0 / 18%);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: background-color 180ms ease;
 }
 
 .blue-orbit-button>span {
-    padding: 0.55rem 1rem;
+    padding: 8px 1rem;
 }
 
 .blue-orbit-button:hover {
+    --blue-hover-ring-alpha: 0.18;
     box-shadow: 0 7px 24px oklch(0.48 0.18 250 / 25%);
-    transform: translateY(-1px);
+}
+
+.blue-orbit-button:hover::after {
+    background-color: color-mix(in oklch, var(--glass-dark), white 5%);
 }
 
 .blue-orbit-button:focus-visible {
@@ -74,7 +106,7 @@
 
 @keyframes blue-orbit {
     to {
-        transform: rotate(1turn);
+        --blue-orbit-angle: 360deg;
     }
 }
 
@@ -84,9 +116,88 @@
     }
 }
 
-/* Frosted glass panels. Tints are tokens (--card / --glass-light) so they re-theme from :root. */
+html[data-transition-frame="calendar"] .calendar-frame {
+    view-transition-name: calendar-frame;
+}
+
+::view-transition-group(calendar-frame) {
+    animation-duration: 650ms;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+::view-transition-old(calendar-frame) {
+    animation: calendar-frame-out 240ms ease-in both;
+}
+
+::view-transition-new(calendar-frame) {
+    animation: calendar-frame-in 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes calendar-frame-out {
+    to {
+        opacity: 0;
+        transform: scale(0.975);
+        filter: blur(5px);
+    }
+}
+
+@keyframes calendar-frame-in {
+    from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.965);
+        filter: blur(7px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(calendar-frame),
+    ::view-transition-old(calendar-frame),
+    ::view-transition-new(calendar-frame) {
+        animation-duration: 1ms;
+    }
+}
+
+html[data-transition-frame="day"] .calendar-frame {
+    view-transition-name: none;
+}
+
+html[data-transition-frame="day"] .day-frame {
+    view-transition-name: day-frame;
+}
+
+::view-transition-group(day-frame) {
+    animation-duration: 500ms;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+::view-transition-old(day-frame) {
+    animation: day-frame-out 200ms cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+::view-transition-new(day-frame) {
+    animation: day-frame-in 380ms cubic-bezier(0.22, 1, 0.36, 1) 140ms both;
+}
+
+@keyframes day-frame-out {
+    to { opacity: 0; transform: scale(1.04); }
+}
+
+@keyframes day-frame-in {
+    from { opacity: 0; transform: scale(0.94); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(day-frame),
+    ::view-transition-old(day-frame),
+    ::view-transition-new(day-frame) {
+        animation: none;
+    }
+}
+
+/* Frosted glass panels use their own surface tokens. */
 @utility bg-glass-dark {
-    background-color: var(--card);
+    background-color: var(--glass-dark);
     background-image: linear-gradient(135deg, oklch(1 0 0 / 10%), transparent 45%);
     border: 1px solid var(--border);
     box-shadow:
@@ -153,6 +264,7 @@
     --color-secondary-foreground: var(--secondary-foreground);
     --color-secondary: var(--secondary);
     --color-primary-foreground: var(--primary-foreground);
+    --color-primary-hover: var(--primary-hover);
     --color-primary: var(--primary);
     --color-popover-foreground: var(--popover-foreground);
     --color-popover: var(--popover);
@@ -173,15 +285,17 @@
     /* Glass theme: dark canvas, white text, translucent surfaces. */
     --background: oklch(0.17 0.02 275);
     --foreground: oklch(0.985 0 0);
-    --card: oklch(0.2 0.02 275 / 55%);
+    --card: #FAF9F6;
+    --glass-dark: oklch(0.2 0.02 275 / 55%);
     --glass-light: oklch(1 0 0 / 18%);
-    --card-foreground: oklch(0.985 0 0);
+    --card-foreground: oklch(0.145 0 0);
     --popover: oklch(0.2 0.02 275);
     --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.16 0 0);
+    --primary: #000000;
+    --primary-hover: #2C2C2C;
     --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.95 0.025 15);
-    --secondary-foreground: oklch(0.2 0 0);
+    --secondary: oklch(99.115% 0.00423 15.765);
+    --secondary-foreground: var(--primary);
     --muted: oklch(1 0 0 / 10%);
     --muted-foreground: oklch(0.8 0.01 275);
     --accent: oklch(1 0 0 / 12%);
@@ -198,7 +312,7 @@
     --radius: 0.625rem;
     --sidebar: oklch(0.2 0.02 275);
     --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.16 0 0);
+    --sidebar-primary: var(--primary);
     --sidebar-primary-foreground: oklch(0.985 0 0);
     --sidebar-accent: oklch(1 0 0 / 12%);
     --sidebar-accent-foreground: oklch(0.985 0 0);
@@ -209,14 +323,16 @@
 .dark {
     --background: oklch(0.145 0 0);
     --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
+    --card: #FAF9F6;
+    --glass-dark: oklch(0.2 0.02 275 / 55%);
+    --card-foreground: oklch(0.145 0 0);
     --popover: oklch(0.205 0 0);
     --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.16 0 0);
+    --primary: #000000;
+    --primary-hover: #2C2C2C;
     --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
+    --secondary: oklch(99.115% 0.00423 15.765);
+    --secondary-foreground: var(--primary);
     --muted: oklch(0.269 0 0);
     --muted-foreground: oklch(0.708 0 0);
     --accent: oklch(0.269 0 0);
@@ -232,7 +348,7 @@
     --chart-5: oklch(0.269 0 0);
     --sidebar: oklch(0.205 0 0);
     --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary: var(--primary);
     --sidebar-primary-foreground: oklch(0.985 0 0);
     --sidebar-accent: oklch(0.269 0 0);
     --sidebar-accent-foreground: oklch(0.985 0 0);
