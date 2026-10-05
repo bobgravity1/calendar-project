@@ -26,9 +26,11 @@ export const TaskComplete = ({ task }: { task: Task }) => {
 
     return (
         <button onClick={() => completeTask(task)} className="inline-flex items-center gap-2">
-            {click ? <img className='size-6' src={plusToCheck} alt="" />
+            {click ?
+                <img className='size-6' src={plusToCheck} alt="" />
                 : <img className='size-6' src={plus} alt="" />}
-            <p className='clearfix-none whitespace-nowrap text-secondary text-lg font-semibold'>{name}</p>
+
+            <p className='clearfix-none whitespace-nowrap text-inherit text-lg font-semibold'>{name}</p>
         </button>
     )
 };

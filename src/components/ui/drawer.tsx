@@ -17,7 +17,6 @@ function useDrawer() {
   if (!context) {
     throw new Error("useDrawer must be used within a Drawer.")
   }
-
   return context
 }
 

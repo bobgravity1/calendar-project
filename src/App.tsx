@@ -1,8 +1,9 @@
 import { Calendar } from '@/components/ui/calendar/calendar'
+import { TaskView } from './components/ui/tasks/taskView'
 import { Stats } from './components/ui/stats/stats'
 import { Button } from '@/components/ui/button'
 import { Container } from '@/components/container/container'
-import { createContext, useReducer } from 'react'
+import { createContext, useReducer, type JSXElementConstructor, type ReactElement, type ReactNode, type ReactPortal } from 'react'
 import type { Task, TaskAction, User } from '@/types/user'
 import useView from '@/store/useAppStore'
 import { useCalendarStore } from '@/features/calendar/useCalendarState'
@@ -27,15 +28,13 @@ type UserTaskContext = {
   dispatch: React.Dispatch<TaskAction>
 }
 
-
 import { views } from '@/store/useAppStore'
 import type { ViewName } from '@/store/useAppStore'
 
 export const UserContext = createContext<UserTaskContext | null>(null)
-const year = new Date().getFullYear();
 
 function App() {
-  const [tasks, dispatch] = useReducer(setTasks, user.tasks);
+  const [currentUser, dispatch] = useReducer(setTasks, user);
   const view = useView((state) => state.view)
   const setView = useView((state) => state.setView)
   const setCalView = useCalendarStore((state) => state.setCalendarView)
@@ -47,36 +46,40 @@ function App() {
       currCalView === 'month' ? runViewTransition(() => setCalView('year')) : runViewTransition(() => setCalView('month'))
     }
   }
-
-  function setTasks(tasks: Task[], action: TaskAction) {
+  function setTasks(user: User, action: TaskAction) {
     switch (action.type) {
-      case "complete_task": {
-        return tasks.map((task: Task) => action.name === task.name ? { ...task, total: task.total + task.increment } : task)
-      }
-      case "add_task": {
-        // includes would only work for partial match. that would still pass.
-        const match = tasks.some(task => task.name === action.task.name)
-        if (match) {
-          return [...tasks]
+      case "add_task":
+        return {
+          ...user, tasks: [...user.tasks, action.task]
         }
-        // immutable state with passing, we still need to return the full state, a simple push won't work
-        return [...tasks, { name: action.task.name, increment: action.task.increment, total: 0 }]
-      }
-      case 'delete_task': {
-        return tasks.filter((task: Task) => action.name !== task.name)
-      }
+      case "delete_task":
+        const newTasks = user.tasks.filter(task => task.name !== action.name)
+        return {
+          ...user, tasks: newTasks
+        }
+      case "complete_task":
+        const newSet = user.tasks.map(task => {
+          if (action.name === task.name) {
+            return { name: action.name, total: task.total + task.increment, increment: task.increment }
+          }
+          return task
+        })
+        return {
+          ...user, tasks: newSet
+        }
       default: {
-        return tasks;
+        return user
       }
     }
   }
+
 
   function completeTask(clickedTask: Task) {
     dispatch({ type: 'complete_task', name: clickedTask.name })
   }
 
   const contextValue = {
-    user,
+    user: currentUser,
     dispatch
   }
 
@@ -98,7 +101,7 @@ function App() {
                 </div>
                 <h1 className="text-center text-4xl font-bold">{new Date().getFullYear()}</h1>
                 <SheetTrigger render={
-                  <Button variant='plain' className="group w-32!">
+                  <Button variant='ghost' className="group w-32!">
                     <span className="inline-flex items-center">
                       <span>Menu</span>
                       <img
@@ -113,19 +116,20 @@ function App() {
               </div>
               {view === 'calendar' && <Calendar completeTask={completeTask} />}
               {view === 'stats' && <Stats />}
+              {view === 'tasks' && <TaskView />}
               <SheetContent>
                 <SheetHeader>
                   <SheetTitle>Tasks</SheetTitle>
                   <SheetDescription>
                     <h2 className='text-2xl font-semibold'>User: {user.name}</h2>
-                    {tasks.map(task => {
+                    {/* {tasks.map((task: { name: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; total: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined }) => {
                       return (
                         <>
                           <p>{task.name}</p>
                           <p>{task.total}</p>
                         </>
                       )
-                    })}
+                    })} */}
                   </SheetDescription>
                 </SheetHeader>
               </SheetContent>

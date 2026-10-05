@@ -20,3 +20,4 @@ const useView = create<ViewStore>((set) => ({
 }))
 
 export default useView;
+

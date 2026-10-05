@@ -10,7 +10,7 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import caretRight from '@icons/caret-right.svg'
-import { Chart } from "@/components/ui/stats/chart"
+import { Chart } from "./ui/chart"
 
 export const Stats = () => {
     return (
@@ -20,6 +20,7 @@ export const Stats = () => {
                 <div className="value text-glass"><span id="v-streak">9</span> <span className="unit">days</span></div>
                 <div className="cap">in a row with at least one</div>
             </Card>
+
             <Card variant="glass-dark" className="w-full rounded-lg">
                 <CardHeader>
                     <CardTitle>test Stats</CardTitle>
@@ -27,6 +28,7 @@ export const Stats = () => {
                         Weekly snapshots. No more manual exports.
                     </CardDescription>
                 </CardHeader>
+
                 <CardContent>
                     <ul className="grid gap-2 py-2 text-sm">
                         <li className="flex gap-2">
@@ -43,6 +45,7 @@ export const Stats = () => {
                         </li>
                     </ul>
                 </CardContent>
+
                 <CardFooter className="flex-col gap-2">
                     <Button className="w-full">
                         Set up scheduled reports
@@ -52,6 +55,7 @@ export const Stats = () => {
                     </Button>
                 </CardFooter>
             </Card>
+
             <Card className='bg-glass-dark col-span-2 h-80 w-full rounded-lg'>
                 <Chart />
             </Card>

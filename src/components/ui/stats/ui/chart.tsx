@@ -1,5 +1,5 @@
 import 'chart.js/auto';
-import { Dropdown } from './dropdown'
+import { Dropdown } from './dropdown.tsx'
 
 import { Line } from 'react-chartjs-2';
 
