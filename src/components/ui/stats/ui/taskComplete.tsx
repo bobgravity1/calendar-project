@@ -12,20 +12,12 @@ export const TaskComplete = ({ task }: { task: Task }) => {
     const context = useContext(UserContext)
     const [click, setClick] = useState(false)
 
-    if (!context) throw new Error(`no context found`)
-    const { user, dispatch } = context;
-
-    function completeTask(clickedTask: Task) {
-        setClick(true)
-        dispatch({ type: 'complete_task', name: clickedTask.name })
-    }
-
     useEffect(() => {
         setTimeout(() => setClick(false), 2000)
     }, [click])
 
     return (
-        <button onClick={() => completeTask(task)} className="inline-flex items-center gap-2">
+        <button className="inline-flex items-center gap-2">
             {click ?
                 <img className='size-6' src={plusToCheck} alt="" />
                 : <img className='size-6' src={plus} alt="" />}

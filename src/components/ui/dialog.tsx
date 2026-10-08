@@ -5,6 +5,11 @@ import { cn } from "cn"
 import { Button } from "@/components/ui/button"
 import { XIcon } from "@phosphor-icons/react"
 
+const dialogContentVariants = {
+  default: "bg-card text-primary",
+  glass: "bg-glass-light rounded-t-xl text-primary-foreground border-t-white/80! border-b-white/20!",
+} as const
+
 function Dialog({ ...props }: DialogPrimitive.Root.Props) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />
 }
@@ -40,9 +45,11 @@ function DialogOverlay({
 function DialogContent({
   className,
   children,
+  variant = "default",
   showCloseButton = true,
   ...props
 }: DialogPrimitive.Popup.Props & {
+  variant?: keyof typeof dialogContentVariants
   showCloseButton?: boolean
 }) {
   return (
@@ -51,7 +58,8 @@ function DialogContent({
       <DialogPrimitive.Popup
         data-slot="dialog-content"
         className={cn(
-          "fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-lg bg-card p-8 text-xs/relaxed text-primary ring-1 ring-foreground/10 duration-100 outline-none sm:max-w-sm data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+          "fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-lg p-8 text-xs/relaxed ring-1 ring-foreground/10 duration-100 outline-none sm:max-w-sm data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+          dialogContentVariants[variant],
           className
         )}
         {...props}
@@ -63,7 +71,7 @@ function DialogContent({
             render={
               <Button
                 variant="ghost"
-                className="absolute top-2 right-2"
+                className={cn("absolute top-2 right-2 border border-primary!", variant === "glass" ? "text-primary-foreground" : "text-primary")}
                 size="icon-sm"
               />
             }

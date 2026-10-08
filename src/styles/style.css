@@ -262,6 +262,7 @@ html[data-transition-frame="day"] .day-frame {
     --color-muted-foreground: var(--muted-foreground);
     --color-muted: var(--muted);
     --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary-hover: var(--secondary-hover);
     --color-secondary: var(--secondary);
     --color-primary-foreground: var(--primary-foreground);
     --color-primary-hover: var(--primary-hover);
@@ -294,7 +295,8 @@ html[data-transition-frame="day"] .day-frame {
     --primary: #000000;
     --primary-hover: #2C2C2C;
     --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(99.115% 0.00423 15.765);
+    --secondary: #F7F6F3;
+    --secondary-hover: #EEEDE9;
     --secondary-foreground: var(--primary);
     --muted: oklch(1 0 0 / 10%);
     --muted-foreground: oklch(0.8 0.01 275);
@@ -331,7 +333,8 @@ html[data-transition-frame="day"] .day-frame {
     --primary: #000000;
     --primary-hover: #2C2C2C;
     --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(99.115% 0.00423 15.765);
+    --secondary: #F7F6F3;
+    --secondary-hover: #EEEDE9;
     --secondary-foreground: var(--primary);
     --muted: oklch(0.269 0 0);
     --muted-foreground: oklch(0.708 0 0);

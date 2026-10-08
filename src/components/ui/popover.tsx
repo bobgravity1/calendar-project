@@ -5,6 +5,7 @@ import { cn } from "cn"
 const popoverVariants = {
   default: "bg-secondary text-secondary-foreground [&_img]:brightness-0",
   glass: "bg-glass-dark text-popover-foreground",
+  "glass-light": "bg-glass-light text-foreground",
 } as const
 
 function Popover({ ...props }: PopoverPrimitive.Root.Props) {

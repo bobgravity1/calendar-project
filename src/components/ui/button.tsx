@@ -11,13 +11,13 @@ const buttonVariants = cva(
         outline:
           "bg-transparent text-secondary ring-1 ring-inset ring-secondary hover:bg-secondary hover:text-primary aria-expanded:bg-secondary aria-expanded:text-primary",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary/80 aria-expanded:text-secondary-foreground",
+          "bg-secondary text-secondary-foreground hover:bg-secondary-hover aria-expanded:bg-secondary-hover aria-expanded:text-secondary-foreground",
         ghost:
           "bg-glass-light font-semibold tracking-wider text-primary-foreground hover:bg-muted-foreground/20! hover:[&>span]:scale-[1.05] aria-expanded:bg-[var(--glass-light)] aria-expanded:text-primary-foreground [&>span]:transition-transform [&>span]:duration-200",
         plain:
           "hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
         destructive:
-          "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
+          "bg-transparent ring-destructive ring-2 text-destructive hover:bg-destructive/10 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 text-[13px]! dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
         link: "text-primary underline-offset-4 hover:text-primary-hover hover:underline",
       },
       size: {

@@ -2,22 +2,22 @@ export type Task = {
   name: string
   increment: number
   total: number
+  unit: string
 }
 
-export type Streak = {
-  cookie: number
-  legs: number
-  poop: number
+export type Reminder = {
+  name: string,
+  time: Date,
+  location: string
 }
 
 export type User = {
   name: string
   tasks: Task[]
-  reminders: string[]
-  subscriptions: [],
+  reminders: Reminder[]
 }
 
 export type TaskAction =
-  | { type: 'complete_task'; name: string }
+  | { type: 'complete_task'; task: Task }
   | { type: 'add_task'; task: Task }
-  | { type: 'delete_task'; increment: number; name: string }
+  | { type: 'delete_task'; task: Task }

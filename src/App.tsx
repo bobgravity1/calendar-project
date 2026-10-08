@@ -15,12 +15,11 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 const user: User = {
   name: 'Bobby',
   tasks: [
-    { name: 'cookie', increment: 20, total: 0 },
-    { name: 'leg exercises', increment: 1, total: 0 },
-    { name: 'poop', increment: 1, total: 0 }
+    { name: 'kraties', unit: 'mg', increment: 10, total: 0 },
+    { name: 'legs', unit: 'exercise', increment: 1, total: 0 },
+    { name: 'poop', unit: '', increment: 1, total: 0 }
   ],
-  reminders: [],
-  subscriptions: [],
+  reminders: []
 }
 
 type UserTaskContext = {
@@ -53,29 +52,26 @@ function App() {
           ...user, tasks: [...user.tasks, action.task]
         }
       case "delete_task":
-        const newTasks = user.tasks.filter(task => task.name !== action.name)
+        const newTasks = user.tasks.filter(task => task.name !== action.task.name)
         return {
-          ...user, tasks: newTasks
+          ...user, tasks: [...newTasks]
         }
       case "complete_task":
-        const newSet = user.tasks.map(task => {
-          if (action.name === task.name) {
-            return { name: action.name, total: task.total + task.increment, increment: task.increment }
+        const matchedTask = user.tasks.map(task => {
+          if (task.name === action.task.name) {
+            return { ...task, total: task.increment + task.total }
           }
           return task
         })
-        return {
-          ...user, tasks: newSet
-        }
+        return { user, tasks: matchedTask }
       default: {
         return user
       }
     }
   }
 
-
-  function completeTask(clickedTask: Task) {
-    dispatch({ type: 'complete_task', name: clickedTask.name })
+  function completeTask(task: Task) {
+    dispatch({ type: 'complete_task', task })
   }
 
   const contextValue = {

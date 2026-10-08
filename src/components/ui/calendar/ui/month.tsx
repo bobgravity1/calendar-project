@@ -4,7 +4,6 @@ import { months, weekdays } from "@/data/dates";
 import type { MonthName } from "@/types/dates";
 import type { Task } from "@/types/user";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { RainbowButton } from "../../rainbow-button";
 import { TaskComplete } from "../../stats/ui/taskComplete";
 import { Button } from "../../button";
 import { format, formatDistance } from "date-fns";
@@ -50,13 +49,13 @@ export const Days = ({ completeTask, dayRender, startDay, expanded = false, curr
 
             return (
               <Popover>
-                <PopoverContent variant="glass" className="rounded-lg w-48 px-6 py-4">
+                <PopoverContent variant="glass-light" className="rounded-lg w-48 px-6 py-4">
                   {user.tasks.map((task: Task) => {
                     return (
                       <TaskComplete task={task} />
                     )
                   })}
-                  <RainbowButton>Submit</RainbowButton>
+                  <Button variant="ghost">Submit</Button>
                 </PopoverContent>
                 <PopoverTrigger render={<div style={n === 1 ? { gridColumnStart: startDay } : undefined} key={n} className={`${expanded ? `${numberClasses} size-auto! text-xl min-h-18 w-full! md:min-h-16` : numberClasses} ${todayIndex() === n ? todayClasses : ''}`}><span>{n}</span></div>} />
               </Popover>

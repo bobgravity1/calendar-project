@@ -1,8 +1,10 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { UserContext } from "@/App";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../card";
 import { Button } from "@/components/ui/button"
 import caretRight from '@icons/caret-right.svg'
+import plus from '@icons/plus.svg'
+import plusToCheck from '@icons/plus-to-check.gif'
 import { Dialog, DialogTrigger } from "../dialog";
 import { CreateTask } from "./createTask";
 import type { Task } from "@/types/user";
@@ -15,9 +17,30 @@ export const TaskView = () => {
     const context = useContext(UserContext)
     if (!context) throw new Error(`context not found`);
     const { user, dispatch } = context;
+    const [clickedTasks, setClickedTasks] = useState<Record<string, number>>({});
+    const animationRun = useRef(0);
 
     const createTask = (task: Task) => {
         dispatch({ type: 'add_task', task })
+    }
+
+    const deleteTask = (task: Task) => {
+        dispatch({ type: 'delete_task', task })
+    }
+
+    const incrementTask = (task: Task) => {
+        dispatch({ type: 'complete_task', task })
+    }
+
+    const handleIncrementClick = (task: Task) => {
+        const run = ++animationRun.current;
+        setClickedTasks(previous => ({ ...previous, [task.name]: run }));
+        setTimeout(() => {
+            setClickedTasks(previous => previous[task.name] === run
+                ? { ...previous, [task.name]: 0 }
+                : previous);
+        }, 700);
+        incrementTask(task)
     }
 
     return (
@@ -26,15 +49,25 @@ export const TaskView = () => {
                 <ul className="p-4 border border-white/40 rounded-lg">
                     {user.tasks.map((task: Task) => {
                         return (
-                            <li className='text-lg'>{task.name}</li>
+                            <li key={task.name} className='w-full flex justify-between text-lg'><div className='text-secondary'>{task.name} <span className='text-muted-foreground'>- {task.total} {task.unit}</span></div>
+                                <div className='mb-4 flex items-center gap-4'>
+                                    <button type="button" onClick={() => handleIncrementClick(task)} aria-label={`Increment ${task.name}`} className="flex h-[105%] cursor-pointer px-2.5 items-center justify-center rounded-sm border-2 border-white/30 transition-colors hover:bg-secondary/10">
+                                        <img className="opacity-70 size-5" src={clickedTasks[task.name] ? `${plusToCheck}?run=${clickedTasks[task.name]}` : plus} alt="" />
+                                    </button>
+                                    <Button onClick={() => deleteTask(task)} variant='destructive'>Delete Task</Button>
+                                </div>
+                            </li>
                         )
                     })}
                 </ul>
-                <div className='absolute left-8 bottom-8'>
+                <CardFooter className='mt-auto gap-2 px-0'>
                     <CreateTask createTask={createTask}>
-                        <Button>Create Task</Button>
+                        <Button variant='secondary' className="flex-1">Create Task</Button>
                     </CreateTask>
-                </div>
+                    <CreateTask createTask={createTask}>
+                        <Button variant='secondary' className="flex-1">Edit Task</Button>
+                    </CreateTask>
+                </CardFooter>
             </Card>
             <Card variant="glass-dark" className="w-full rounded-lg">
                 <CardHeader>
@@ -47,7 +80,6 @@ export const TaskView = () => {
                 <CardContent>
                     <ul className="grid gap-2 py-2 text-sm">
                         <li className="flex gap-2">
-
                             <span>Choose a schedule (daily, or weekly).</span>
                         </li>
                         <li className="flex gap-2">
@@ -61,11 +93,11 @@ export const TaskView = () => {
                     </ul>
                 </CardContent>
 
-                <CardFooter className="flex-col gap-2">
-                    <Button className="w-full">
+                <CardFooter className="mt-auto gap-2 px-0">
+                    <Button className="flex-1">
                         Set up scheduled reports
                     </Button>
-                    <Button variant="secondary" className="w-full">
+                    <Button variant="secondary" className="flex-1">
                         See what&apos;s new
                     </Button>
                 </CardFooter>
