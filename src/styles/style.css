@@ -224,6 +224,11 @@ html[data-transition-frame="day"] .day-frame {
     text-shadow: 0 1px 2px oklch(0 0 0 / 35%);
 }
 
+/* Dialog titles — the one deliberate red override. */
+@utility text-title {
+    color: var(--color-red-700);
+}
+
 @utility glass-item {
     background: linear-gradient(to bottom right,
             rgb(255 255 255 / 12%),

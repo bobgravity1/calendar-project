@@ -56,14 +56,19 @@ function App() {
         return {
           ...user, tasks: [...newTasks]
         }
+      case "edit_task":
+        const editedTasks = user.tasks.map(task => task.name === action.task.name ? action.task : task)
+        return {
+          ...user, tasks: editedTasks
+        }
       case "complete_task":
         const matchedTask = user.tasks.map(task => {
           if (task.name === action.task.name) {
-            return { ...task, total: task.increment + task.total }
+            return { ...task, total: Number(task.increment + task.total) }
           }
           return task
         })
-        return { user, tasks: matchedTask }
+        return { ...user, tasks: matchedTask }
       default: {
         return user
       }

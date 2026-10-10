@@ -42,7 +42,7 @@ export function CreateTask({ children, createTask }: CreateTaskProps) {
             <DialogTrigger render={children} />
             <DialogContent className="rounded-t-xl border border-white/40 border-t-white/90 border-b-black/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_18px_40px_rgba(0,0,0,0.2)] sm:max-w-md">
                 <DialogHeader className="gap-2">
-                    <DialogTitle className="text-xl font-bold text-red-700">Create Task</DialogTitle>
+                    <DialogTitle className="text-xl font-bold text-title">Create Task</DialogTitle>
                     <DialogDescription className="text-sm/relaxed text-primary/65">
                         Type in the name and set the increment factor (1, 5, 10 etc.)
                     </DialogDescription>

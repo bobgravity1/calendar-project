@@ -8,16 +8,38 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 
-const items = [
-    { label: "Show Task Metrics", value: null },
-    { label: "Leg Exercises", value: "leg exercises" },
-]
+// import { Task } from "@/types/user"
+import { UserContext } from "@/App"
+import { useContext, useState } from "react"
+import type { Task } from "@/types/user"
+
+
 
 export const Dropdown = () => {
+    const context = useContext(UserContext)
+    if (!context) throw new Error(`no state for user found`)
+    const { user, dispatch } = context;
+    const [selectedTask, setSelectedTask] = useState<string | null>(null)
+
+    const inputItems = user.tasks.map((task: Task) => {
+        return {
+            value: task.name,
+            label: task.name
+        }
+    })
+
+    const items = [
+        ...inputItems
+    ]
+    // for the chart
+    // const task = user.tasks.find((t) => t.name === selectedTask)
+
     return (
-        <Select items={items} >
+        <Select value={selectedTask} onValueChange={(value) => {
+            setSelectedTask(value)
+        }} items={items} >
             <SelectTrigger className="w-full max-w-48">
-                <SelectValue />
+                <SelectValue placeholder="Select a task" />
             </SelectTrigger>
             <SelectContent>
                 <SelectGroup>

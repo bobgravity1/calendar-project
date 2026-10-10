@@ -21,3 +21,4 @@ export type TaskAction =
   | { type: 'complete_task'; task: Task }
   | { type: 'add_task'; task: Task }
   | { type: 'delete_task'; task: Task }
+  | { type: 'edit_task', task: Task }

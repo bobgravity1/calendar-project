@@ -8,6 +8,7 @@ import plusToCheck from '@icons/plus-to-check.gif'
 import { Dialog, DialogTrigger } from "../dialog";
 import { CreateTask } from "./createTask";
 import type { Task } from "@/types/user";
+import { EditTask } from "./editTask";
 // const createNewTask = () => {
 
 //     dispatch({ type: 'add_task', null })
@@ -26,6 +27,10 @@ export const TaskView = () => {
 
     const deleteTask = (task: Task) => {
         dispatch({ type: 'delete_task', task })
+    }
+
+    const editTask = (task: Task) => {
+        dispatch({ type: 'edit_task', task })
     }
 
     const incrementTask = (task: Task) => {
@@ -54,7 +59,7 @@ export const TaskView = () => {
                                     <button type="button" onClick={() => handleIncrementClick(task)} aria-label={`Increment ${task.name}`} className="flex h-[105%] cursor-pointer px-2.5 items-center justify-center rounded-sm border-2 border-white/30 transition-colors hover:bg-secondary/10">
                                         <img className="opacity-70 size-5" src={clickedTasks[task.name] ? `${plusToCheck}?run=${clickedTasks[task.name]}` : plus} alt="" />
                                     </button>
-                                    <Button onClick={() => deleteTask(task)} variant='destructive'>Delete Task</Button>
+                                    <Button notification onClick={() => deleteTask(task)} variant='destructive'>Delete Task</Button>
                                 </div>
                             </li>
                         )
@@ -64,9 +69,9 @@ export const TaskView = () => {
                     <CreateTask createTask={createTask}>
                         <Button variant='secondary' className="flex-1">Create Task</Button>
                     </CreateTask>
-                    <CreateTask createTask={createTask}>
+                    <EditTask user={user} editTask={editTask}>
                         <Button variant='secondary' className="flex-1">Edit Task</Button>
-                    </CreateTask>
+                    </EditTask>
                 </CardFooter>
             </Card>
             <Card variant="glass-dark" className="w-full rounded-lg">
