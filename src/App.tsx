@@ -48,6 +48,8 @@ function App() {
   function setTasks(user: User, action: TaskAction) {
     switch (action.type) {
       case "add_task":
+        // names are how every action finds a task, so a duplicate would get updated alongside the original
+        if (user.tasks.some(task => task.name === action.task.name)) return user
         return {
           ...user, tasks: [...user.tasks, action.task]
         }

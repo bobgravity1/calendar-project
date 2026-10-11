@@ -20,6 +20,22 @@ interface CreateTaskProps {
     createTask: (task: Task) => void
 }
 
+const createDBNewTask = async (task: Task) => {
+    const { name, increment, unit } = task;
+    try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/task/create-task`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: name, unit: unit, increment: Number(increment), }),
+        }).then(res => res.json())
+    }
+    catch (err) {
+        throw new Error(`Error: ${err}`)
+    }
+}
+
+
+
 export function CreateTask({ children, createTask }: CreateTaskProps) {
     const [formValues, setFormValues] = useState({ name: '', unit: '', increment: 0, total: 0 })
 
@@ -27,8 +43,10 @@ export function CreateTask({ children, createTask }: CreateTaskProps) {
         e.preventDefault();
         const anyNulls = Object.values(formValues).some(val => val === '') ||
             formValues.increment === 0
-        !anyNulls && setFormValues({ name: formValues.name, unit: formValues.unit, increment: formValues.increment, total: 0 })
-        createTask(formValues)
+        if (anyNulls) return
+        createTask({ ...formValues, increment: Number(formValues.increment) })
+        setFormValues({ name: '', unit: '', increment: 0, total: 0 })
+        createDBNewTask(formValues);
     }
 
     const formChange = (e: React.ChangeEvent<HTMLInputElement>) => {

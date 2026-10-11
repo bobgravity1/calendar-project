@@ -33,3 +33,7 @@ NOTES.md
 *.njsproj
 *.sln
 *.sw?
+
+# Local SQLite data
+*.db
+*.db-*

@@ -3,6 +3,7 @@ import { UserContext } from "@/App";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../card";
 import { Button } from "@/components/ui/button"
 import caretRight from '@icons/caret-right.svg'
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import plus from '@icons/plus.svg'
 import plusToCheck from '@icons/plus-to-check.gif'
 import { Dialog, DialogTrigger } from "../dialog";
@@ -25,8 +26,21 @@ export const TaskView = () => {
         dispatch({ type: 'add_task', task })
     }
 
+    const deleteDBTask = async (task: Task) => {
+        try {
+            const deletedUser = await fetch(`${import.meta.env.VITE_API_URL}/api/task/delete-task/${task.name}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+            }).then(res => res.json())
+        }
+        catch (err) {
+            throw new Error(`User NOT Deleted:${err}`)
+        }
+    }
+
     const deleteTask = (task: Task) => {
         dispatch({ type: 'delete_task', task })
+        deleteDBTask(task)
     }
 
     const editTask = (task: Task) => {
@@ -84,17 +98,25 @@ export const TaskView = () => {
 
                 <CardContent>
                     <ul className="grid gap-2 py-2 text-sm">
-                        <li className="flex gap-2">
-                            <span>Choose a schedule (daily, or weekly).</span>
-                        </li>
-                        <li className="flex gap-2">
-                            <img src={caretRight} />
-                            <span>Send to channels or specific teammates.</span>
-                        </li>
-                        <li className="flex gap-2">
-                            <img src={caretRight} />
-                            <span>Include charts, tables, and key metrics.</span>
-                        </li>
+                        {[
+                            "Choose a schedule (daily, or weekly).",
+                            "Send to channels or specific teammates.",
+                            "Include charts, tables, and key metrics.",
+                        ].map((label) => (
+                            <li key={label} className="flex gap-2">
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger className="flex cursor-pointer items-center gap-2 text-left">
+                                        <img src={caretRight} alt="" />
+                                        <span>{label}</span>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent>
+                                        <DropdownMenuItem render={<Button type="button" className="w-full" />} closeOnClick={false}>
+                                            Placeholder
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </li>
+                        ))}
                     </ul>
                 </CardContent>
 

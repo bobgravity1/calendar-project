@@ -4,7 +4,7 @@ import { months, weekdays } from "@/data/dates";
 import type { MonthName } from "@/types/dates";
 import type { Task } from "@/types/user";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { TaskComplete } from "../../stats/ui/taskComplete";
+import { SelectedDayStats } from "../../stats/ui/selectedDayStats";
 import { Button } from "../../button";
 import { format, formatDistance } from "date-fns";
 
@@ -16,7 +16,7 @@ const dayClasses = `relative text-primary/80! font-extrabold! size-10 flex items
   after:absolute after:top-1/2 after:-right-1 after:h-[50%] after:w-[.24px] after:-translate-y-1/2
   after:bg-white/80 last:after:hidden`
 // --------------days/number-------------- //
-const numberClasses = `[&>span]:transition hover:scale-[.95] [&>span]:animation [&>span]:duration hover:[&>span]:scale-[1.3] grid size-10 select-none border-transparent border hover:border-secondary/40 font-semibold! text-secondary place-items-center rounded-sm lg:cursor-pointer transition duration-200 hover:border-muted-foreground animation hover:bg-primary/20`
+const numberClasses = `[&>span]:transition not-data-popup-open:hover:scale-[.95] [&>span]:animation [&>span]:duration hover:[&>span]:scale-[1.3] grid size-10 select-none border-transparent border hover:border-secondary/40 font-semibold! text-secondary place-items-center rounded-sm lg:cursor-pointer transition duration-200 hover:border-muted-foreground animation hover:bg-primary/20`
 const todayClasses = `ring-2 scale-[.9] hover:[&>span]:scale-[1.3] [&>span]:scale-[1.1] ring-inset ring-secondary/40 hover:ring-0`
 // -------------task checkboxes------------ //
 const checkboxClasses = `peer h-5 w-5 cursor-pointer transition-all appearance-none rounded shadow hover:shadow-md border border-slate-300 checked:bg-red-600 checked:border-red-600`
@@ -28,7 +28,6 @@ export const Days = ({ completeTask, dayRender, startDay, expanded = false, curr
   const context = useContext(UserContext)
   if (!context) throw new Error("UserContext provider is missing")
   const { user } = context;
-
   return (
     <div className={expanded ? 'w-full px-4 py-6 md:px-10' : 'py-4'}>
       <div className={dayContainer}>
@@ -49,13 +48,8 @@ export const Days = ({ completeTask, dayRender, startDay, expanded = false, curr
 
             return (
               <Popover>
-                <PopoverContent variant="glass-light" className="rounded-lg w-48 px-6 py-4">
-                  {user.tasks.map((task: Task) => {
-                    return (
-                      <TaskComplete task={task} />
-                    )
-                  })}
-                  <Button variant="ghost">Submit</Button>
+                <PopoverContent className="rounded-lg w-48 px-6 py-4">
+                  <SelectedDayStats day={n} month={currentMonthIndex} />
                 </PopoverContent>
                 <PopoverTrigger render={<div style={n === 1 ? { gridColumnStart: startDay } : undefined} key={n} className={`${expanded ? `${numberClasses} size-auto! text-xl min-h-18 w-full! md:min-h-16` : numberClasses} ${todayIndex() === n ? todayClasses : ''}`}><span>{n}</span></div>} />
               </Popover>
