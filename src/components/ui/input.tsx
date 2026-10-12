@@ -4,6 +4,7 @@ import { cn } from "cn"
 
 const inputVariants = {
   default: "",
+  card: "h-10 rounded-sm border-black/20 bg-white px-3 text-sm text-card-foreground shadow-sm placeholder:text-card-foreground/50 focus-visible:border-primary focus-visible:ring-primary/15 dark:bg-white md:text-sm",
   ghost: "border-white/35 bg-glass-light text-foreground placeholder:text-white/60 focus-visible:border-white/70 focus-visible:ring-white/25 dark:bg-glass-light",
 } as const
 

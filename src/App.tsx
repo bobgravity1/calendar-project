@@ -12,12 +12,14 @@ import caretRight from '@icons/caret-right.svg'
 import bgImage from '@/assets/background/gradient.webp'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 
+const tasks = await fetch(`${import.meta.env.VITE_API_URL}/api/task`, {
+  headers: { 'Content-Type': 'application/json' }
+}).then(res => res.json())
+
 const user: User = {
   name: 'Bobby',
   tasks: [
-    { name: 'kraties', unit: 'mg', increment: 10, total: 0 },
-    { name: 'legs', unit: 'exercise', increment: 1, total: 0 },
-    { name: 'poop', unit: '', increment: 1, total: 0 }
+    ...tasks.tasks
   ],
   reminders: []
 }
@@ -63,22 +65,40 @@ function App() {
         return {
           ...user, tasks: editedTasks
         }
-      case "complete_task":
-        const matchedTask = user.tasks.map(task => {
-          if (task.name === action.task.name) {
-            return { ...task, total: Number(task.increment + task.total) }
-          }
-          return task
-        })
-        return { ...user, tasks: matchedTask }
+      // case "complete_task":
+      //   const matchedTask = user.tasks.map(task => {
+      //     if (task.name === action.task.name) {
+      //       return { ...task, total: Number(task.increment + task.total) }
+      //     }
+      //     return task
+      //   })
+      //   return { ...user, tasks: matchedTask }
       default: {
         return user
       }
     }
   }
 
-  function completeTask(task: Task) {
-    dispatch({ type: 'complete_task', task })
+
+  async function createDBLog(task: Task) {
+    const { increment, name } = task;
+    let data;
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/log/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: increment, task: name })
+      })
+      // Once you do .then(res => res.json()), you’ve passed along 
+      // the body and lost that response object. Your body doesn’t 
+      // contain an ok property.
+      if (!response.ok) throw new Error(`Log Failed: ${response.status}`)
+      data = await response.json()
+    }
+    catch (err) {
+      throw new Error(`log not created: ${err}`)
+    }
+    console.log(data)
   }
 
   const contextValue = {
@@ -104,22 +124,22 @@ function App() {
                 </div>
                 <h1 className="text-center text-4xl font-bold">{new Date().getFullYear()}</h1>
                 <SheetTrigger render={
-                  <Button variant='ghost' className="group w-32!">
-                    <span className="inline-flex items-center">
+                  <Button variant='ghost' className="group w-24!">
+                    <span className="relative left-2 inline-flex items-center">
                       <span>Menu</span>
                       <img
                         src={caretRight}
                         alt=""
                         aria-hidden="true"
-                        className="-ml-2 size-8 transition-transform duration-200 group-hover:translate-x-px"
+                        className="-ml-2 size-7 transition-transform duration-200 group-hover:translate-x-px"
                       />
                     </span>
                   </Button>
                 } />
               </div>
-              {view === 'calendar' && <Calendar completeTask={completeTask} />}
+              {view === 'calendar' && <Calendar createDBLog={createDBLog} />}
               {view === 'stats' && <Stats />}
-              {view === 'tasks' && <TaskView />}
+              {view === 'tasks' && <TaskView createDBLog={createDBLog} />}
               <SheetContent>
                 <SheetHeader>
                   <SheetTitle>Tasks</SheetTitle>
@@ -144,4 +164,4 @@ function App() {
   )
 }
 
-export default App
+export default App;

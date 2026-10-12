@@ -22,7 +22,7 @@ import { personalData } from '../../../data/dates'
 
 const { date, month, day, weather, city, ip } = personalData;
 
-export const Calendar = ({ completeTask }: { completeTask: Function }) => {
+export const Calendar = ({ createDBLog }: { createDBLog: Function }) => {
   const calendarView = useCalendarStore((state) => state.view)
   const setCalendarView = useCalendarStore((state) => state.setCalendarView)
   const firstMonth = months[0]
@@ -41,7 +41,7 @@ export const Calendar = ({ completeTask }: { completeTask: Function }) => {
                 <header className="w-full bg-primary py-2 text-primary-foreground">
                   <h2 className="w-full text-center text-xl font-medium">{month}</h2>
                 </header>
-                <Month completeTask={completeTask} monthRender={month} />
+                <Month createDBLog={createDBLog} monthRender={month} />
               </article>
             ))}
           </div>
@@ -52,7 +52,7 @@ export const Calendar = ({ completeTask }: { completeTask: Function }) => {
                 const slideMonth = months[(months.indexOf(month) + index) % months.length]
                 return (
                   <CarouselItem className='basis-1/1' key={index}>
-                    <MonthCard completeTask={completeTask} slideMonth={slideMonth} onClickView={onClickView} />
+                    <MonthCard createDBLog={createDBLog} slideMonth={slideMonth} onClickView={onClickView} />
                   </CarouselItem>
                 )
               })}

@@ -6,6 +6,13 @@ import { eq } from "drizzle-orm";
 
 const taskApp = new Hono();
 
+taskApp.get('/', async (c) => {
+    const tasks = await db.query.task.findMany()
+    if (!tasks) return c.json({ err: `task not found` }, 400)
+
+    return c.json({ tasks }, 200)
+})
+
 taskApp.get('/task/:name', async (c) => {
     const taskName = c.req.param("name");
     const taskMatch = await db.query.task.findFirst({

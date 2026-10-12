@@ -2,11 +2,12 @@ import React, { useContext, useRef, useState } from "react";
 import { UserContext } from "@/App";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../card";
 import { Button } from "@/components/ui/button"
-import caretRight from '@icons/caret-right.svg'
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu"
+import { Badge } from "@/components/ui/badge"
+import { DotsThreeIcon } from "@phosphor-icons/react"
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuFooter } from "@/components/ui/dropdown-menu"
+import { Notification } from "./notification"
 import plus from '@icons/plus.svg'
 import plusToCheck from '@icons/plus-to-check.gif'
-import { Dialog, DialogTrigger } from "../dialog";
 import { CreateTask } from "./createTask";
 import type { Task } from "@/types/user";
 import { EditTask } from "./editTask";
@@ -15,12 +16,14 @@ import { EditTask } from "./editTask";
 //     dispatch({ type: 'add_task', null })
 // }
 
-export const TaskView = () => {
+export const TaskView = ({ createDBLog }: { createDBLog: (task: Task) => Promise<void> }) => {
     const context = useContext(UserContext)
     if (!context) throw new Error(`context not found`);
     const { user, dispatch } = context;
     const [clickedTasks, setClickedTasks] = useState<Record<string, number>>({});
     const animationRun = useRef(0);
+    const [panel, setPanel] = useState<"create" | "edit">("create");
+    const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
 
     const createTask = (task: Task) => {
         dispatch({ type: 'add_task', task })
@@ -47,10 +50,6 @@ export const TaskView = () => {
         dispatch({ type: 'edit_task', task })
     }
 
-    const incrementTask = (task: Task) => {
-        dispatch({ type: 'complete_task', task })
-    }
-
     const handleIncrementClick = (task: Task) => {
         const run = ++animationRun.current;
         setClickedTasks(previous => ({ ...previous, [task.name]: run }));
@@ -59,76 +58,69 @@ export const TaskView = () => {
                 ? { ...previous, [task.name]: 0 }
                 : previous);
         }, 700);
-        incrementTask(task)
+        createDBLog(task)
     }
 
     return (
-        <section className='relative mx-auto grid grid-cols-2 flex-wrap gap-4 max-w-5xl'>
-            <Card variant="glass-dark" className="w-full rounded-lg">
-                <ul className="p-4 border border-white/40 rounded-lg">
-                    {user.tasks.map((task: Task) => {
-                        return (
-                            <li key={task.name} className='w-full flex justify-between text-lg'><div className='text-secondary'>{task.name} <span className='text-muted-foreground'>- {task.total} {task.unit}</span></div>
-                                <div className='mb-4 flex items-center gap-4'>
-                                    <button type="button" onClick={() => handleIncrementClick(task)} aria-label={`Increment ${task.name}`} className="flex h-[105%] cursor-pointer px-2.5 items-center justify-center rounded-sm border-2 border-white/30 transition-colors hover:bg-secondary/10">
-                                        <img className="opacity-70 size-5" src={clickedTasks[task.name] ? `${plusToCheck}?run=${clickedTasks[task.name]}` : plus} alt="" />
-                                    </button>
-                                    <Button notification onClick={() => deleteTask(task)} variant='destructive'>Delete Task</Button>
-                                </div>
-                            </li>
-                        )
-                    })}
-                </ul>
-                <CardFooter className='mt-auto gap-2 px-0'>
-                    <CreateTask createTask={createTask}>
-                        <Button variant='secondary' className="flex-1">Create Task</Button>
-                    </CreateTask>
-                    <EditTask user={user} editTask={editTask}>
-                        <Button variant='secondary' className="flex-1">Edit Task</Button>
-                    </EditTask>
-                </CardFooter>
-            </Card>
-            <Card variant="glass-dark" className="w-full rounded-lg">
+        <section className="relative mx-auto grid max-w-5xl grid-cols-1 gap-4 px-4 pb-8 md:grid-cols-[1.25fr_1fr] md:px-0">
+            <Card variant="glass-dark" badge={<Badge variant="primary">{user.tasks.length} tasks</Badge>} className="md:min-h-[34rem]">
                 <CardHeader>
-                    <CardTitle>test Stats</CardTitle>
-                    <CardDescription>
-                        Weekly snapshots. No more manual exports.
-                    </CardDescription>
+                    <CardTitle>Your tasks</CardTitle>
+                    <CardDescription>Tap + to log one increment.</CardDescription>
                 </CardHeader>
-
                 <CardContent>
-                    <ul className="grid gap-2 py-2 text-sm">
-                        {[
-                            "Choose a schedule (daily, or weekly).",
-                            "Send to channels or specific teammates.",
-                            "Include charts, tables, and key metrics.",
-                        ].map((label) => (
-                            <li key={label} className="flex gap-2">
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger className="flex cursor-pointer items-center gap-2 text-left">
-                                        <img src={caretRight} alt="" />
-                                        <span>{label}</span>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent>
-                                        <DropdownMenuItem render={<Button type="button" className="w-full" />} closeOnClick={false}>
-                                            Placeholder
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
+                    {user.tasks.length === 0 && (
+                        <div className="grid gap-2 py-8 text-center">
+                            <CardTitle>No Tasks Yet</CardTitle>
+                            <CardDescription>Create one and it shows up on every day in the calendar and will be logged.</CardDescription>
+                        </div>
+                    )}
+                    <ul className="grid gap-2">
+                        {user.tasks.map((task: Task) => (
+                            <li key={task.name}>
+                                <Card variant="glass-dark" size="sm">
+                                    <CardContent className="flex items-center justify-between gap-3">
+                                        <div className="min-w-0">
+                                            <CardTitle className="flex flex-wrap items-center gap-2 text-lg font-normal">
+                                                {task.name}
+                                                {task.unit && <Badge variant="primary">{task.unit}</Badge>}
+                                            </CardTitle>
+                                            <CardDescription>+{task.increment} {task.unit} per log · {task.total} {task.unit} today</CardDescription>
+                                        </div>
+                                        <div className="flex shrink-0 items-center gap-2">
+                                            <Button type="button" variant="increment" size="icon" onClick={() => handleIncrementClick(task)} aria-label={`Increment ${task.name}`}>
+                                                <img className="size-5 opacity-70" src={clickedTasks[task.name] ? `${plusToCheck}?run=${clickedTasks[task.name]}` : plus} alt="" />
+                                            </Button>
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger render={<Button type="button" variant="plain" size="icon-sm" aria-label={`Actions for ${task.name}`} />}>
+                                                    <DotsThreeIcon weight="bold" />
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end">
+                                                    <DropdownMenuItem onClick={() => { setTaskToEdit(task); setPanel("edit") }}>
+                                                        Edit task
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuFooter>
+                                                        <Notification onConfirm={() => deleteTask(task)}>
+                                                            <DropdownMenuItem variant="destructive" nativeButton render={<button type="button" />} closeOnClick={false}>
+                                                                Delete task
+                                                            </DropdownMenuItem>
+                                                        </Notification>
+                                                    </DropdownMenuFooter>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </div>
+                                    </CardContent>
+                                </Card>
                             </li>
                         ))}
                     </ul>
                 </CardContent>
-
-                <CardFooter className="mt-auto gap-2 px-0">
-                    <Button className="flex-1">
-                        Set up scheduled reports
-                    </Button>
-                    <Button variant="secondary" className="flex-1">
-                        See what&apos;s new
-                    </Button>
+                <CardFooter className="mt-auto">
+                    <Button type="button" variant="secondary" aria-pressed={panel === "create"} onClick={() => setPanel("create")} className="flex-1">Create Task</Button>
+                    <Button type="button" variant="secondary" aria-pressed={panel === "edit"} onClick={() => { setTaskToEdit(null); setPanel("edit") }} className="flex-1">Edit Task</Button>
                 </CardFooter>
             </Card>
-        </section >
+            {panel === "create" ? <CreateTask createTask={createTask} /> : <EditTask key={taskToEdit ? `task:${taskToEdit.name}` : "list"} user={user} editTask={editTask} initialTask={taskToEdit ?? undefined} onBack={() => setTaskToEdit(null)} />}
+        </section>
     )
 };

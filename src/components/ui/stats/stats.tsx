@@ -5,69 +5,68 @@ import {
     Card,
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
 import caretRight from '@icons/caret-right.svg'
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { Chart } from "./ui/chart"
+import { Heatmap } from "@/components/ui/heatmap"
+import { TotalsByTask } from "./ui/totalsByTask"
 
 export const Stats = () => {
     return (
-        <section className='mx-auto grid grid-cols-2 flex-wrap gap-4 max-w-5xl'>
-            <Card variant="glass-dark" className="w-full rounded-lg">
-                <div className="label">Current streak</div>
-                <div className="value text-glass"><span id="v-streak">9</span> <span className="unit">days</span></div>
-                <div className="cap">in a row with at least one</div>
-            </Card>
+        <section className='pb-12'>
+            <div className='mx-auto grid grid-cols-3 flex-wrap gap-4 max-w-6xl mb-4'>
+                <Card variant="glass-dark" className="w-full h-40 rounded-lg">
+                    <CardHeader>
+                        <CardTitle>Current streak</CardTitle>
+                    </CardHeader>
+                    <CardContent><strong>9</strong> days</CardContent>
+                    <CardDescription>in a row with at least one</CardDescription>
+                </Card>
+                <Card variant="glass-dark" className="w-full h-40 rounded-lg">
+                    <CardHeader>
+                        <CardTitle>Logs this week</CardTitle>
+                    </CardHeader>
+                    <CardContent><strong>0</strong> logs</CardContent>
+                    <CardDescription>across all tasks</CardDescription>
+                </Card>
 
-            <Card variant="glass-dark" className="w-full rounded-lg">
-                <CardHeader>
-                    <CardTitle>test Stats</CardTitle>
-                    <CardDescription>
-                        Weekly snapshots. No more manual exports.
-                    </CardDescription>
-                </CardHeader>
-
-                <CardContent>
-                    <ul className="grid gap-2 py-2 text-sm">
-                        {[
-                            "Choose a schedule (daily, or weekly).",
-                            "Send to channels or specific teammates.",
-                            "Include charts, tables, and key metrics.",
-                        ].map((label) => (
-                            <li key={label} className="flex gap-2">
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger className="flex cursor-pointer items-center gap-2 text-left">
-                                        <img src={caretRight} alt="" />
-                                        <span>{label}</span>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent>
-                                        <DropdownMenuItem render={<Button type="button" className="w-full" />} closeOnClick={false}>
-                                            Placeholder
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </li>
-                        ))}
-                    </ul>
-                </CardContent>
-
-                <CardFooter className="flex-col gap-2">
-                    <Button className="w-full">
-                        Set up scheduled reports
-                    </Button>
-                    <Button variant="secondary" className="w-full">
-                        See what&apos;s new
-                    </Button>
-                </CardFooter>
-            </Card>
-
-            <Card className='bg-glass-dark col-span-2 h-80 w-full rounded-lg'>
-                <Chart />
-            </Card>
-        </section >
-
+                <Card variant="glass-dark" className="w-full h-40 rounded-lg">
+                    <CardHeader>
+                        <CardTitle>Task today</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger className="flex cursor-pointer items-center gap-2 text-left">
+                                <img src={caretRight} alt="" />
+                                <span>hey</span>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuItem render={<Button type="button" className="w-full" />} closeOnClick={false}>
+                                    Placeholder
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </CardContent>
+                </Card>
+                <Card variant="glass-dark" className='col-span-3 h-80 w-full'>
+                    <Chart />
+                </Card>
+            </div>
+            <div className="mx-auto grid grid-cols-1 gap-4 max-w-6xl md:grid-cols-2">
+                <Card variant="glass-dark">
+                    <CardHeader>
+                        <CardTitle>Activity</CardTitle>
+                        <CardDescription>0 logs per day · last 18 weeks</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Heatmap />
+                    </CardContent>
+                </Card>
+                <TotalsByTask />
+            </div>
+        </section>
     )
 };

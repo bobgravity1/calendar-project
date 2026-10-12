@@ -1,22 +1,11 @@
 import { Button } from "@/components/ui/button"
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { use, useContext, useState, type SetStateAction } from "react";
+import { useState } from "react";
 import type { Task } from '@/types/user'
-import { UserContext } from "@/App";
 
 interface CreateTaskProps {
-    children: React.ReactElement;
     createTask: (task: Task) => void
 }
 
@@ -36,7 +25,7 @@ const createDBNewTask = async (task: Task) => {
 
 
 
-export function CreateTask({ children, createTask }: CreateTaskProps) {
+export function CreateTask({ createTask }: CreateTaskProps) {
     const [formValues, setFormValues] = useState({ name: '', unit: '', increment: 0, total: 0 })
 
     const onSubmission = (e: { preventDefault: () => void; }) => {
@@ -55,39 +44,35 @@ export function CreateTask({ children, createTask }: CreateTaskProps) {
     }
 
     return (
-        <Dialog>
-            {/* Open Dialog box */}
-            <DialogTrigger render={children} />
-            <DialogContent className="rounded-t-xl border border-white/40 border-t-white/90 border-b-black/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_18px_40px_rgba(0,0,0,0.2)] sm:max-w-md">
-                <DialogHeader className="gap-2">
-                    <DialogTitle className="text-xl font-bold text-title">Create Task</DialogTitle>
-                    <DialogDescription className="text-sm/relaxed text-primary/65">
-                        Type in the name and set the increment factor (1, 5, 10 etc.)
-                    </DialogDescription>
-                </DialogHeader>
-                <DialogFooter className="flex-col! items-stretch! gap-3">
-                    <form onSubmit={onSubmission} className="grid gap-4">
-                        <div className="grid gap-2">
-                            <Label htmlFor="name" className="text-sm font-semibold text-primary">Name</Label>
-                            <Input name="name" onChange={formChange} value={formValues['name']} className="h-10 rounded-sm border-black/20 bg-white px-3 text-sm text-primary shadow-sm focus-visible:border-primary focus-visible:ring-primary/15" />
-                        </div>
+        <Card>
+            <CardHeader>
+                <CardTitle variant="form">Create Task</CardTitle>
+                <CardDescription>
+                    Type in the name and set the increment factor (1, 5, 10 etc.)
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
+                <form onSubmit={onSubmission} className="grid gap-4">
+                    <div className="grid gap-2">
+                        <Label htmlFor="create-name">Name</Label>
+                        <Input id="create-name" name="name" variant="card" onChange={formChange} value={formValues['name']} />
+                    </div>
 
-                        <div className="grid gap-2">
-                            <Label htmlFor="unit" className="text-sm font-semibold text-primary">Unit (eg. mg, exercise, meal)</Label>
-                            <Input name="unit" onChange={formChange} value={formValues['unit']} className="h-10 rounded-sm border-black/20 bg-white px-3 text-sm text-primary shadow-sm focus-visible:border-primary focus-visible:ring-primary/15" />
-                        </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="create-unit">Unit (eg. mg, exercise, meal)</Label>
+                        <Input id="create-unit" name="unit" variant="card" onChange={formChange} value={formValues['unit']} />
+                    </div>
 
-                        <div className="grid gap-2">
-                            <Label htmlFor="increment" className="text-sm font-semibold text-primary">Increment Amount(s) (eg. +1, +5 each time)</Label>
-                            <Input name="increment" onChange={formChange} value={formValues['increment']} className="h-10 rounded-sm border-black/20 bg-white px-3 text-sm text-primary shadow-sm focus-visible:border-primary focus-visible:ring-primary/15" />
-                            <span className="-mt-1 text-[11px]/relaxed font-normal italic text-primary/50">* If you take 40mg average you can still set this to 10 and increment by 4 every log</span>
-                        </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="create-increment">Increment Amount(s) (eg. +1, +5 each time)</Label>
+                        <Input id="create-increment" name="increment" variant="card" onChange={formChange} value={formValues['increment']} />
+                        <span className="text-xs/relaxed italic opacity-60">* If you take 40mg average you can still set this to 10 and increment by 4 every log</span>
+                    </div>
 
-                        <DialogClose render={<Button disabled={formValues.name.length === 0} type='submit' className="w-full text-sm font-semibold">Submit</Button>} />
-                    </form>
-                    <DialogClose render={<Button type="button" variant="outline" className="w-full text-sm font-semibold text-primary ring-black/20 hover:bg-black/5">Close</Button>} />
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+                    <Button disabled={formValues.name.length === 0} type="submit">Submit</Button>
+                    <Button type="button" variant="outline" onClick={() => setFormValues({ name: '', unit: '', increment: 0, total: 0 })}>Clear</Button>
+                </form>
+            </CardContent>
+        </Card>
     )
 }

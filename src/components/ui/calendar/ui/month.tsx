@@ -21,7 +21,7 @@ const todayClasses = `ring-2 scale-[.9] hover:[&>span]:scale-[1.3] [&>span]:scal
 // -------------task checkboxes------------ //
 const checkboxClasses = `peer h-5 w-5 cursor-pointer transition-all appearance-none rounded shadow hover:shadow-md border border-slate-300 checked:bg-red-600 checked:border-red-600`
 
-export const Days = ({ completeTask, dayRender, startDay, expanded = false, currentMonthIndex }: { currentMonthIndex: number, completeTask: Function, dayRender: number, startDay: number, expanded?: boolean }) => {
+export const Days = ({ createDBLog, dayRender, startDay, expanded = false, currentMonthIndex }: { currentMonthIndex: number, createDBLog: Function, dayRender: number, startDay: number, expanded?: boolean }) => {
   const num = Array.from({ length: dayRender }, (_, i) => i + 1)
   // Array.from has an optional second parameter called mapFn
   // it calls that function once per index while it builds the new array.
@@ -61,7 +61,7 @@ export const Days = ({ completeTask, dayRender, startDay, expanded = false, curr
   )
 }
 
-export const Month = ({ monthRender, completeTask, expanded = false }: { completeTask: Function, monthRender: MonthName, expanded?: boolean }) => {
+export const Month = ({ monthRender, createDBLog, expanded = false }: { createDBLog: Function, monthRender: MonthName, expanded?: boolean }) => {
   let dayCount = 31;
   const short: MonthName[] = ['June', 'September', 'November', 'April'];
   if (monthRender === 'February') {
@@ -77,18 +77,18 @@ export const Month = ({ monthRender, completeTask, expanded = false }: { complet
   console.log(`monthIndex:${monthIndex}`, startDay)
 
   return (
-    <Days completeTask={completeTask} startDay={startDay} dayRender={dayCount} expanded={expanded} currentMonthIndex={monthIndex} />
+    <Days createDBLog={createDBLog} startDay={startDay} dayRender={dayCount} expanded={expanded} currentMonthIndex={monthIndex} />
   )
 }
 
-export const MonthCard = ({ completeTask, slideMonth, onClickView }: { completeTask: Function, slideMonth: MonthName, onClickView: (name: 'year' | 'month' | 'day') => void }) => {
+export const MonthCard = ({ createDBLog, slideMonth, onClickView }: { createDBLog: Function, slideMonth: MonthName, onClickView: (name: 'year' | 'month' | 'day') => void }) => {
   return <article className="bg-glass-light relative flex w-full flex-col items-center overflow-hidden rounded-2xl border-0 text-foreground shadow-2xl">
     <div className="flex min-h-152 w-full flex-col">
       <div className="min-h-0 w-full flex-1 overflow-y-auto">
         <header className="relative flex w-full bg-primary py-3 text-primary-foreground">
           <h2 className="mx-auto text-center text-2xl font-semibold">{slideMonth}</h2>
         </header>
-        <Month completeTask={completeTask} monthRender={slideMonth} expanded />
+        <Month createDBLog={createDBLog} monthRender={slideMonth} expanded />
       </div>
       <nav className="flex shrink-0 justify-center gap-x-4 pb-8">
         <Button onClick={() => onClickView('year')} className="flex h-10 w-52 items-center justify-center rounded-lg border-0 px-4 py-2 text-[15px] font-bold">

@@ -8,17 +8,21 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary-hover",
+        default: "bg-primary text-primary-foreground hover:bg-primary-hover [text-shadow:none]",
         outline:
-          "bg-transparent text-secondary ring-1 ring-inset ring-secondary hover:bg-secondary hover:text-primary aria-expanded:bg-secondary aria-expanded:text-primary",
+          "bg-transparent text-inherit border-current/30 hover:bg-muted aria-expanded:bg-muted",
+        increment:
+          "bg-transparent text-inherit border-2 border-white/30 hover:bg-secondary/10",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary-hover aria-expanded:bg-secondary-hover aria-expanded:text-secondary-foreground",
+          "bg-secondary text-secondary-foreground hover:bg-secondary-hover aria-expanded:bg-secondary-hover aria-expanded:text-secondary-foreground [text-shadow:none]",
         ghost:
-          "bg-glass-light font-semibold tracking-wider text-primary-foreground hover:bg-muted-foreground/20! hover:[&>span]:scale-[1.05] aria-expanded:bg-[var(--glass-light)] aria-expanded:text-primary-foreground [&>span]:transition-transform [&>span]:duration-200",
+          "bg-glass-light font-semibold tracking-wider text-glass shadow-none hover:bg-white/25 aria-expanded:bg-white/25",
+        "glass-light": "bg-glass-light text-glass shadow-none hover:bg-white/25",
+        "glass-dark": "bg-glass-dark text-glass shadow-none hover:bg-black/60",
         plain:
           "hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
         destructive:
-          "bg-transparent ring-destructive ring-2 text-destructive hover:bg-destructive/10 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 text-[13px]! dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
+          "bg-transparent border-2 border-destructive text-destructive hover:bg-destructive/10 focus-visible:ring-destructive/20",
         link: "text-primary underline-offset-4 hover:text-primary-hover hover:underline",
       },
       size: {
@@ -26,8 +30,8 @@ const buttonVariants = cva(
           "h-10 gap-1.5 px-4 py-2 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
         xs: "h-6 gap-1 px-2 text-xs has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
         sm: "h-7 gap-1 px-2.5 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
-        lg: "h-9 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
-        icon: "size-8",
+        lg: "h-11 gap-2 px-6 has-data-[icon=inline-end]:pr-4 has-data-[icon=inline-start]:pl-4",
+        icon: "size-10",
         "icon-xs": "size-6 [&_svg:not([class*='size-'])]:size-3",
         "icon-sm": "size-7",
         "icon-lg": "size-9",

@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import db from "../db/db.ts";
 import { sValidator } from "@hono/standard-validator";
 import { logTable, newLogSchema } from '../db/schemas/log.ts'
+import { desc } from "drizzle-orm";
 
 const logApp = new Hono();
 
@@ -19,5 +20,15 @@ logApp.post('/create', sValidator("json", newLogSchema), async (c) => {
     const [newLog] = await db.insert(logTable).values(submission).returning();
     return c.json({ newLog }, 200)
 })
+
+logApp.get('/latest', async c => {
+    const [latestLog] = await db.select().from(logTable)
+        .orderBy(desc(logTable.createdAt), desc(logTable.log_id))
+        .limit(1);
+    if (!latestLog) return c.json(null, 200)
+
+    return c.json({ latestLog }, 200)
+})
+
 
 export default logApp;
