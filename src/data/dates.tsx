@@ -10,7 +10,7 @@ export const leap_years = [2028, 2032]
 export const today = new Date().toISOString();
 
 export const weekdays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'] as const;
-const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+export const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 const VITE_IPKEY = import.meta.env.VITE_IPLOCATE_API_KEY;
 const VITE_VISUAL_API_KEY = import.meta.env.VITE_VISUAL_CROSSING_API_KEY;

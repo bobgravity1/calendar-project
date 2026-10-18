@@ -11,6 +11,7 @@ import plusToCheck from '@icons/plus-to-check.gif'
 import { CreateTask } from "./createTask";
 import type { Task } from "@/types/user";
 import { EditTask } from "./editTask";
+import { EventClick } from "../event-click";
 // const createNewTask = () => {
 
 //     dispatch({ type: 'add_task', null })
@@ -58,6 +59,7 @@ export const TaskView = ({ createDBLog }: { createDBLog: (task: Task) => Promise
                 ? { ...previous, [task.name]: 0 }
                 : previous);
         }, 700);
+
         createDBLog(task)
     }
 
@@ -88,9 +90,11 @@ export const TaskView = ({ createDBLog }: { createDBLog: (task: Task) => Promise
                                             <CardDescription>+{task.increment} {task.unit} per log · {task.total} {task.unit} today</CardDescription>
                                         </div>
                                         <div className="flex shrink-0 items-center gap-2">
-                                            <Button type="button" variant="increment" size="icon" onClick={() => handleIncrementClick(task)} aria-label={`Increment ${task.name}`}>
-                                                <img className="size-5 opacity-70" src={clickedTasks[task.name] ? `${plusToCheck}?run=${clickedTasks[task.name]}` : plus} alt="" />
-                                            </Button>
+                                            <EventClick>
+                                                <Button type="button" variant="increment" size="icon" onClick={() => handleIncrementClick(task)} aria-label={`Increment ${task.name}`}>
+                                                    <img className="size-5 opacity-70" src={clickedTasks[task.name] ? `${plusToCheck}?run=${clickedTasks[task.name]}` : plus} alt="" />
+                                                </Button>
+                                            </EventClick>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger render={<Button type="button" variant="plain" size="icon-sm" aria-label={`Actions for ${task.name}`} />}>
                                                     <DotsThreeIcon weight="bold" />

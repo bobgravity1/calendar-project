@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react";
 import type { Task } from '@/types/user'
+import { EventClick } from "../event-click";
 
 interface CreateTaskProps {
     createTask: (task: Task) => void
@@ -69,7 +70,7 @@ export function CreateTask({ createTask }: CreateTaskProps) {
                         <span className="text-xs/relaxed italic opacity-60">* If you take 40mg average you can still set this to 10 and increment by 4 every log</span>
                     </div>
 
-                    <Button disabled={formValues.name.length === 0} type="submit">Submit</Button>
+                    <EventClick><Button disabled={formValues.name.length === 0} type="submit">Submit</Button></EventClick>
                     <Button type="button" variant="outline" onClick={() => setFormValues({ name: '', unit: '', increment: 0, total: 0 })}>Clear</Button>
                 </form>
             </CardContent>
