@@ -10,7 +10,6 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import type { Task } from '@/types/user'
-import { insertDBTask } from '../../../lib/api/db-functions'
 import { EventClick } from '../event-click'
 
 interface CreateTaskProps {
@@ -35,8 +34,6 @@ export function CreateTask({ createTask }: CreateTaskProps) {
     const task = { ...formValues, increment: Number(formValues.increment) }
     createTask(task)
     setFormValues({ name: '', unit: '', increment: 0, total: 0 })
-
-    insertDBTask(task)
   }
 
   const formChange = (e: React.ChangeEvent<HTMLInputElement>) => {

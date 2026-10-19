@@ -30,7 +30,11 @@ import { Notification } from './notification'
 //     dispatch({ type: 'add_task', null })
 // }
 
-import { deleteDBTask } from '../../../lib/api/db-functions'
+import {
+  deleteDBTask,
+  insertDBTask,
+} from '../../../lib/api/task/task-functions'
+import { getDBTodayLogs } from '@/lib/api/log/log-functions'
 
 export const TaskView = ({
   createDBLog,
@@ -45,14 +49,18 @@ export const TaskView = ({
   const [panel, setPanel] = useState<'create' | 'edit'>('create')
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null)
 
-  const createTask = (task: Task) => {
+  const createTask = async (task: Task) => {
+    await insertDBTask(task)
     dispatch({ type: 'add_task', task })
   }
 
-  const deleteTask = (task: Task) => {
+  const deleteTask = async (task: Task) => {
+    await deleteDBTask(task)
     dispatch({ type: 'delete_task', task })
-    deleteDBTask(task)
   }
+
+  const allLogs = getDBTodayLogs()
+  console.log(allLogs)
 
   const editTask = (task: Task) => {
     dispatch({ type: 'edit_task', task })
@@ -85,7 +93,7 @@ export const TaskView = ({
         </CardHeader>
         <CardContent>
           {user.tasks.length === 0 && (
-            <div className="grid gap-2 py-8 text-center">
+            <div className="grid gap-2 py-8 text-center mx-16">
               <CardTitle>No Tasks Yet</CardTitle>
               <CardDescription>
                 Create one and it shows up on every day in the calendar and will

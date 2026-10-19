@@ -26,7 +26,8 @@ import type { Task, TaskAction, User } from '@/types/user'
 import { Stats } from './components/ui/stats/stats'
 import { TaskView } from './components/ui/tasks/taskView'
 
-import { getAllTasks, createDBLog } from './lib/api/db-functions'
+import { createDBLog } from './lib/api/log/log-functions'
+import { getAllTasks } from './lib/api/task/task-functions'
 
 const dbTasks = await getAllTasks()
 
@@ -64,7 +65,7 @@ function App() {
   function setTasks(user: User, action: TaskAction) {
     switch (action.type) {
       case 'add_task':
-        // names are how every action finds a task, so a duplicate would get updated alongside the original
+        // names are how every action finds a task, a duplicate would get updated alongside the original
         if (user.tasks.some((task) => task.name === action.task.name))
           return user
         return {
@@ -75,6 +76,7 @@ function App() {
         const newTasks = user.tasks.filter(
           (task) => task.name !== action.task.name,
         )
+
         return {
           ...user,
           tasks: [...newTasks],
