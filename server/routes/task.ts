@@ -1,8 +1,8 @@
-import { Hono } from "hono";
 import { sValidator } from "@hono/standard-validator";
-import db from '../db/db.ts'
-import { taskTable, newTaskSchema } from "../db/schemas/task.ts";
 import { eq } from "drizzle-orm";
+import { Hono } from "hono";
+import db from '../db/db.ts'
+import { newTaskSchema, taskTable } from "../db/schemas/task.ts";
 
 const taskApp = new Hono();
 

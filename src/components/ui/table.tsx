@@ -1,5 +1,5 @@
-import type { ComponentProps } from "react"
 import { cn } from "cn"
+import type { ComponentProps } from "react"
 
 function Table({ className, ...props }: ComponentProps<"table">) {
   return (
@@ -37,4 +37,4 @@ function TableCaption({ className, ...props }: ComponentProps<"caption">) {
   return <caption data-slot="table-caption" className={cn("mt-4 text-xs text-inherit opacity-75", className)} {...props} />
 }
 
-export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption }
+export { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow }

@@ -1,3 +1,4 @@
+import caretRight from '@icons/caret-right.svg'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -6,15 +7,14 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import caretRight from '@icons/caret-right.svg'
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { LineChart } from './ui/linechart'
 import { Heatmap } from '@/components/ui/heatmap'
+import { LineChart } from './ui/linechart'
 import { TotalsByTask } from './ui/totalsByTask'
 
 export const Stats = () => {

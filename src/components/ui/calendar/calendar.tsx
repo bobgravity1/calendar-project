@@ -1,3 +1,6 @@
+import { tz } from "@date-fns/tz";
+import { format, formatDistanceStrict } from "date-fns";
+import { Button } from '@/components/ui/button'
 import {
   Carousel,
   CarouselContent,
@@ -5,20 +8,14 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-import { useCalendarStore } from '../../../features/calendar/useCalendarState'
-import { tz } from "@date-fns/tz";
-import { format, formatDistanceStrict } from "date-fns";
-import type { MonthName } from "@/types/dates";
 import { months } from "@/data/dates";
-import { Month, MonthCard } from "./ui/month";
-
 import { runViewTransition } from "@/lib/view-transition";
+import type { MonthName } from "@/types/dates";
 import alignToCenter from "../../../../Align To Center.svg";
-import { Button } from '@/components/ui/button'
-
-import { Today } from "./ui/today";
-
 import { personalData } from '../../../data/dates'
+import { useCalendarStore } from '../../../features/calendar/useCalendarState'
+import { Month, MonthCard } from "./ui/month";
+import { Today } from "./ui/today";
 
 const { date, month, day, weather, city, ip } = personalData;
 

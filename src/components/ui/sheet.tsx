@@ -1,8 +1,7 @@
-import * as React from "react"
 import { Dialog as SheetPrimitive } from "@base-ui/react/dialog"
-import { cn } from "cn"
-
 import closeIcon from "@icons/Close_MD.svg"
+import { cn } from "cn"
+import * as React from "react"
 import { Button } from "@/components/ui/button"
 
 function Sheet({ ...props }: SheetPrimitive.Root.Props) {
@@ -125,11 +124,11 @@ function SheetDescription({
 
 export {
   Sheet,
-  SheetTrigger,
   SheetClose,
   SheetContent,
-  SheetHeader,
-  SheetFooter,
-  SheetTitle,
   SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
 }

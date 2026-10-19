@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from "react";
 import plus from '@icons/plus.svg'
 import plusToCheck from '@icons/plus-to-check.gif'
-import type { Task } from "@/types/user";
-import { useContext } from "react";
+import { XIcon } from "@phosphor-icons/react";
+import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "@/App";
-import type { MonthName } from "@/types/dates";
 import { months } from "@/data/dates";
+import type { MonthName } from "@/types/dates";
+import type { Task } from "@/types/user";
 import { Button } from "../../button";
 import { PopoverClose } from "../../popover";
-import { XIcon } from "@phosphor-icons/react";
 
 // onClick={() => completeTask(task)}
 

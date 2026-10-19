@@ -1,3 +1,7 @@
+import { useContext, useState } from "react"
+
+// import { Task } from "@/types/user"
+import { UserContext } from "@/App"
 import {
     Select,
     SelectContent,
@@ -7,10 +11,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-
-// import { Task } from "@/types/user"
-import { UserContext } from "@/App"
-import { useContext, useState } from "react"
 import type { Task } from "@/types/user"
 
 

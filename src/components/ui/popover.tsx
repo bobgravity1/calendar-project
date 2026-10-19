@@ -1,6 +1,6 @@
-import * as React from "react"
 import { Popover as PopoverPrimitive } from "@base-ui/react/popover"
 import { cn } from "cn"
+import * as React from "react"
 
 const popoverVariants = {
   default: "bg-secondary text-secondary-foreground [&_img]:brightness-0",

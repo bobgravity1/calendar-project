@@ -1,9 +1,8 @@
-import * as React from "react"
 import { Toast as ToastPrimitive } from "@base-ui/react/toast"
+import { CheckCircleIcon, InfoIcon, SpinnerIcon, WarningIcon, XCircleIcon, XIcon } from "@phosphor-icons/react"
 import { cn } from "cn"
-
+import * as React from "react"
 import { Button } from "@/components/ui/button"
-import { XIcon, CheckCircleIcon, InfoIcon, WarningIcon, XCircleIcon, SpinnerIcon } from "@phosphor-icons/react"
 
 const toast = ToastPrimitive.createToastManager()
 
@@ -216,17 +215,17 @@ const createToastManager = ToastPrimitive.createToastManager
 const useToastManager = ToastPrimitive.useToastManager
 
 export {
-  Toaster,
+  createToastManager,
   Toast,
   ToastAction,
   ToastClose,
   ToastContent,
   ToastDescription,
+  Toaster,
   ToastPortal,
   ToastProvider,
   ToastTitle,
   ToastViewport,
-  createToastManager,
   toast,
   useToastManager,
 }

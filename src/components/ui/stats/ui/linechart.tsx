@@ -1,7 +1,7 @@
 import 'chart.js/auto'
-import { Dropdown } from './dropdown.tsx'
 
 import { Line } from 'react-chartjs-2'
+import { Dropdown } from './dropdown.tsx'
 
 export const LineChart = () => {
   return (

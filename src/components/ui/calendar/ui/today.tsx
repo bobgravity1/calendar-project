@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
-import { Button } from '../../button'
 import { personalData } from '../../../../data/dates'
+import { Button } from '../../button'
 import { DayFeed } from './dayFeed'
 
 const { date, month, day, weather, city, ip } = personalData

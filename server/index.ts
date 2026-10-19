@@ -1,12 +1,8 @@
 import { Hono } from 'hono'
-import logApp from './routes/log.ts'
-import taskApp from './routes/task.ts'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
-import { desc } from 'drizzle-orm'
-import { logTable, newLogSchema } from './db/schemas/log.ts'
-import { taskTable, newTaskSchema } from './db/schemas/task.ts'
-import db from './db/db.ts'
+import logApp from './routes/log.ts'
+import taskApp from './routes/task.ts'
 
 const app = new Hono()
 // built in middleware for logging server side routines

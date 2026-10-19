@@ -43,4 +43,4 @@ function DropdownMenuFooter({ className, ...props }: MenuPrimitive.Group.Props) 
   return <MenuPrimitive.Group data-slot="dropdown-menu-footer" className={cn("-mx-1 -mb-1 mt-1 border-t border-white/10 bg-black/10 p-1", className)} {...props} />
 }
 
-export { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLinkItem, DropdownMenuFooter }
+export { DropdownMenu, DropdownMenuContent, DropdownMenuFooter, DropdownMenuItem, DropdownMenuLinkItem, DropdownMenuTrigger }
