@@ -1,10 +1,7 @@
 import React, { useContext } from 'react'
 import { UserContext } from '@/App'
-import { Card } from '../../card'
 import { DayChart } from './dayChart'
 import { DayTable } from './dayTable'
-
-const cardStyles = `h-38 w-full px-6 text-primary py-4 rounded-xl border-primary/80`
 
 export const DayFeed = () => {
   const context = useContext(UserContext)
@@ -12,15 +9,9 @@ export const DayFeed = () => {
   const { user, dispatch } = context
 
   return (
-    <section className="grid grid-cols-2 justify-items-center gap-4 mx-6 mt-6 mb-8 place-items-center">
+    <section className="grid min-h-0 flex-1 grid-cols-2 justify-items-center gap-4 mx-6 mt-6 mb-8">
       <DayTable user={user} dispatch={dispatch} />
       <DayChart user={user} dispatch={dispatch} />
-      <Card className={cardStyles} variant="glass-dark">
-        News Feed
-      </Card>
-      <Card className={cardStyles} variant="glass-dark">
-        News Feed
-      </Card>
     </section>
   )
 }

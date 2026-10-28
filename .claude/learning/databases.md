@@ -103,3 +103,34 @@ DELETE FROM task;
 ```
 
 Clearing only `log` is fine in any order, since nothing points at a log.
+
+## Store facts, compute everything else (the append-only log)
+
+The log table never stores "the current total." It stores facts that happened, like "kratom, 10, at 8:32pm," and everything on screen is calculated from them. That pattern is usually called an **append-only log**, and taken further it becomes **event sourcing**. It works like a pure function: the same logs in always give the same totals out. It's also the same idea as a reducer:
+
+```
+useReducer:   state = actions.reduce(reducer, initialState)
+the log table: total = logs.reduce((sum, log) => sum + log.amount, 0)
+```
+
+Each log stores its **own** `amount` instead of looking up the task's current increment. That's what keeps history honest: if kratom's increment changes from 10 to 20, old logs still say 10, so editing a task never silently rewrites past days. Clean data in is guarded at the door too, because the insert schema accepts only `task` and `amount` and the server stamps the rest.
+
+## Fetch everything and filter in JS, or ask the server for less?
+
+For a personal tracker, fetching every log and filtering in the browser is the more reliable choice. Filtering 10,000 logs in JS takes about a millisecond. What grows is the download: at 30 logs a day, a year is about 11,000 rows, roughly 1 MB of JSON or around 100 KB compressed, once per page load. The browser's `isToday` also uses your local day, while a SQL date filter uses the server's day and needs time-zone handling. If the download ever feels slow, add a route that takes a date range, and fetch only what the screen shows.
+
+## What happens to the children when a parent is deleted
+
+A foreign key is a rule: every `log.task` must match an existing `task.name`. When a parent row is deleted, the database needs to know what to do with the rows pointing at it, and you choose that per foreign key with `onDelete`:
+
+```ts
+task: text().notNull().references(() => taskTable.name, {
+  onUpdate: "cascade",  // rename a task → every log's task name follows (already in the schema)
+  onDelete: "cascade",  // delete a task → its logs are deleted with it
+}),
+// the other choices:
+//   "no action" (the default) → refuse the delete while logs exist; this is what blocked the delete
+//   "set null"                → keep the logs but blank out their task; the column must allow null
+```
+
+The alternative is doing it in the route, deleting the logs first and then the task. Both work, and the difference is *where the rule lives*. The route version is visible in your code. The cascade lives in the table definition and fires for every delete, including ones made in Drizzle Studio or raw SQL, so it's more reliable but invisible when you read the route. One SQLite-specific catch: changing a foreign key means rebuilding the table. `drizzle-kit push` handles it by copying the rows into a new table, but back up real data first.

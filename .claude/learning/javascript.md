@@ -72,3 +72,33 @@ new Date(createdAt) < now    → true    "a day passed"  (wrong)
 Every log ever made is earlier than now, so `<` would report a new day constantly. `date-fns`'s `isToday` compares calendar days in your *local* time zone. Without a library, compare against midnight this morning instead (`const start = new Date(); start.setHours(0, 0, 0, 0)`).
 
 Also: `createdAt` arrives from the API as a string, because JSON has no date type. Comparing a string to a `Date` with `<` doesn't do what you mean, so wrap it in `new Date(createdAt)` first. A string ending in `Z` is UTC, and `new Date` reads it correctly.
+
+## `filter` means "keep where," not "filter out"
+
+The name works against you. In everyday English, "filter out" means remove, but JavaScript's `filter` **keeps** every item whose callback returns `true`. Read the callback as the question "keep this one?" and write the condition for what you *want*:
+
+```ts
+// keep only kratom's logs, the same as SQL's WHERE task = 'kratom'
+logs.filter((log) => log.task === 'kratom')
+
+// kratom 10 → true  → kept
+// leg 5     → false → dropped
+// kratom 10 → true  → kept
+// result: [kratom 10, kratom 10]
+```
+
+`!==` is right when the goal is removal, because removing one thing means keeping everything else. The `delete_task` reducer does exactly that with `task.name !== action.task.name`. The mix-up happens when that `!==` gets carried over into code that's selecting instead of removing. `filter` never changes the original array either. It returns a new one, so the result has to be saved in a variable or returned.
+
+## Two ways a function silently returns the wrong thing
+
+Both of these came up while writing a total function, and in both the logic inside was right while the function handed back something useless.
+
+**Braces need a `return`.** An arrow function without braces returns its expression automatically. Add braces and it becomes a normal block that returns `undefined` unless you say `return`:
+
+```ts
+const a = (logs) => logs.reduce((t, l) => t + l.amount, 0)          // returns the number
+const b = (logs) => { logs.reduce((t, l) => t + l.amount, 0) }      // computes it, returns undefined
+const c = (logs) => { return logs.reduce((t, l) => t + l.amount, 0) } // returns the number
+```
+
+**`async` always returns a Promise.** Marking a function `async` wraps whatever it returns in a Promise, even when nothing inside awaits. In a component, `{logTotal(task)}` would then try to render a Promise object, and React refuses ("Objects are not valid as a React child"). Only mark a function `async` when it actually waits for something, like a fetch. A function that adds up numbers already in memory should be plain.

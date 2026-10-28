@@ -1,9 +1,11 @@
 import React from 'react'
-import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
+import { Button } from '@/components/ui/button'
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts'
 import {
   Card,
   CardAction,
   CardContent,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
@@ -26,8 +28,7 @@ const chartData = days.map((day, index) => ({
 const chartConfig = {
   amount: {
     label: 'Amount',
-    // shadcn's default chart blue, lightened and pulled toward the app's 275 hue
-    color: 'oklch(0.72 0.13 272)',
+    color: 'rgb(255 255 255 / 80%)',
   },
 } satisfies ChartConfig
 
@@ -39,12 +40,12 @@ export const DayChart = ({
   dispatch: React.Dispatch<TaskAction>
 }) => {
   return (
-    <Card variant="glass-dark" className="h-full w-full">
+    <Card className="h-full w-full bg-transparent border border-white/20 text-white">
       <CardHeader>
         <CardTitle>Logs</CardTitle>
-        <CardAction>
+        <CardAction className="absolute top-4 right-4">
           <Tabs defaultValue="week">
-            <TabsList variant="glass-light" className="border border-white/20">
+            <TabsList variant="glass-light" className="border border-white/20 text-white">
               <TabsTrigger value="week">week</TabsTrigger>
               <TabsTrigger value="month">month</TabsTrigger>
               <TabsTrigger value="year">year</TabsTrigger>
@@ -52,10 +53,19 @@ export const DayChart = ({
           </Tabs>
         </CardAction>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
-            <CartesianGrid vertical={false} />
+      <CardContent className="flex min-h-0 flex-1 flex-col">
+        <ChartContainer config={chartConfig} className="flex-1 min-h-0 aspect-auto bg-glass-dark bg-none [--glass-dark:oklch(0.2_0.02_275/30%)] rounded-lg [&_.recharts-cartesian-axis-tick_text]:!fill-white">
+          <BarChart accessibilityLayer data={chartData} margin={{ top: 16, right: 8, bottom: 0, left: 0 }}>
+            <CartesianGrid vertical={false} syncWithTicks />
+            <YAxis
+              domain={[0, 280]}
+              ticks={[40, 80, 120, 160, 200, 240, 280]}
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              width={40}
+              interval={0}
+            />
             <XAxis
               dataKey="day"
               tickLine={false}
@@ -71,6 +81,10 @@ export const DayChart = ({
           </BarChart>
         </ChartContainer>
       </CardContent>
+      <CardFooter className="mt-auto gap-3">
+        <Button type="button" variant="secondary" className="flex-1">View logs</Button>
+        <Button type="button" variant="secondary" className="flex-1">Export CSV</Button>
+      </CardFooter>
     </Card>
   )
 }

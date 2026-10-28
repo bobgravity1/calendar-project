@@ -12,7 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import type { Task } from '@/types/user'
+import type { Log, Task } from '@/types/user'
 import {
   Card,
   CardContent,
@@ -35,11 +35,12 @@ import {
   insertDBTask,
 } from '../../../lib/api/task/task-functions'
 import { getDBTodayLogs } from '@/lib/api/log/log-functions'
+import { todayTotal } from '@/lib/totals'
 
 export const TaskView = ({
   createDBLog,
 }: {
-  createDBLog: (task: Task) => Promise<void>
+  createDBLog: (task: Task) => Promise<Log>
 }) => {
   const context = useContext(UserContext)
   if (!context) throw new Error(`context not found`)
@@ -60,14 +61,17 @@ export const TaskView = ({
   }
 
   const allLogs = getDBTodayLogs()
-  console.log(allLogs)
 
   const editTask = (task: Task) => {
     dispatch({ type: 'edit_task', task })
   }
 
-  const handleIncrementClick = (task: Task) => {
+  const handleIncrementClick = async (task: Task) => {
     const run = ++animationRun.current
+
+    const newLog = await createDBLog(task)
+    dispatch({ type: 'add_log', log: newLog })
+
     setClickedTasks((previous) => ({ ...previous, [task.name]: run }))
     setTimeout(() => {
       setClickedTasks((previous) =>
@@ -76,8 +80,6 @@ export const TaskView = ({
           : previous,
       )
     }, 700)
-
-    createDBLog(task)
   }
 
   return (
@@ -114,8 +116,8 @@ export const TaskView = ({
                         )}
                       </CardTitle>
                       <CardDescription>
-                        +{task.increment} {task.unit} per log · {task.total}{' '}
-                        {task.unit} today
+                        +{task.increment} {task.unit} per log ·{' '}
+                        {todayTotal(user.logs, task.name)} {task.unit} today
                       </CardDescription>
                     </div>
                     <div className="flex shrink-0 items-center gap-2">

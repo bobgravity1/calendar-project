@@ -18,9 +18,9 @@ export const Today = ({
   onClickView: (name: 'year' | 'month' | 'day') => void
 }) => {
   return (
-    <article className="day-frame bg-glass-light relative mx-auto flex w-full max-w-4xl flex-col items-center overflow-hidden rounded-2xl border-0 text-foreground shadow-2xl md:w-[75vw]">
+    <article className="day-frame bg-glass-dark relative mx-auto flex w-full max-w-4xl flex-col items-center overflow-hidden rounded-2xl border-0 text-foreground shadow-2xl md:w-[75vw]">
       <div className="flex h-[72vh] min-h-152 w-full flex-col">
-        <div className="min-h-0 w-full flex-1 overflow-y-auto">
+        <div className="w-full shrink-0">
           <header className="relative items-center px-16 flex w-full bg-primary py-3 text-primary-foreground">
             <div className="absolute left-8 items-center flex gap-1">
               <p className="flex gap-x-1 items-center text-xl font-semibold">

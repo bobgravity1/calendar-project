@@ -57,3 +57,19 @@ dispatch({ type: 'add_log', log: newLog })  // state holds exactly what the DB h
 ```
 
 The cost is a short delay before the number changes, which a button animation easily covers.
+
+## Calculations belong in pure helpers that take state as an argument
+
+A total that reads a module-level variable, like `dbLogs` captured at page load, is frozen at that snapshot. When a tap adds a log to `user.logs` later, the total never sees it. Passing the logs in fixes that, and it makes the helper pure: same logs in, same total out.
+
+```ts
+// src/lib/totals.ts: no fetch and no state of its own, so it can run during render
+export function todayTotal(logs: Log[], name: string) {
+  return todayLogs(logs, name).reduce((total, log) => total + log.amount, 0)
+}
+
+// in the component: always reads the current state
+{todayTotal(user.logs, task.name)}
+```
+
+The opposite mistake is calling a fetch directly in a component body (`const allLogs = getDBTodayLogs()`). The body runs on every render, so that fires a network request every render. If the result goes into state, `setState` then triggers another render, and it loops forever. A component that needs its own data fetches inside `useEffect(() => { ... }, [])`, which runs once on mount.

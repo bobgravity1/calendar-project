@@ -22,19 +22,26 @@ import {
 import { useCalendarStore } from '@/features/calendar/useCalendarState'
 import { runViewTransition } from '@/lib/view-transition'
 import useView from '@/store/useAppStore'
-import type { Task, TaskAction, User } from '@/types/user'
+import type { Log, Task, TaskAction, User } from '@/types/user'
 import { Stats } from './components/ui/stats/stats'
 import { TaskView } from './components/ui/tasks/taskView'
 
-import { createDBLog } from './lib/api/log/log-functions'
+import {
+  createDBLog,
+  getAllDBLogs,
+  getAllLogs,
+  getDBTodayLogs,
+} from './lib/api/log/log-functions'
 import { getAllTasks } from './lib/api/task/task-functions'
 
 const dbTasks = await getAllTasks()
+const dbLogs = await getAllLogs()
 
 const user: User = {
   name: 'Bobby',
   tasks: [...dbTasks],
   reminders: [],
+  logs: [...dbLogs],
 }
 
 type UserTaskContext = {
@@ -76,7 +83,6 @@ function App() {
         const newTasks = user.tasks.filter(
           (task) => task.name !== action.task.name,
         )
-
         return {
           ...user,
           tasks: [...newTasks],
@@ -89,6 +95,10 @@ function App() {
           ...user,
           tasks: editedTasks,
         }
+      // CONTINUE THIS TOMORROW
+
+      case 'add_log':
+        return { ...user, logs: [...user.logs, action.log] }
       // case "complete_task":
       //   const matchedTask = user.tasks.map(task => {
       //     if (task.name === action.task.name) {

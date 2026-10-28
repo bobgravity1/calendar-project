@@ -22,7 +22,7 @@ export async function createDBLog(task: Task) {
   } catch (err) {
     throw new Error(`log not created: ${err}`)
   }
-  console.log(data)
+  return data.newLog
 }
 
 export async function getAllDBLogs() {
@@ -46,6 +46,13 @@ export async function getAllDBLogs() {
   )
   // { kratom: [...logs], leg: [...logs] }
   return fullLogObject
+}
+
+export async function getAllLogs() {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/api/log`)
+  if (!response.ok) throw new Error(`failed to get logs: ${response.status}`)
+  const { logs } = await response.json()
+  return logs
 }
 
 export async function hasDayPassed() {
@@ -97,7 +104,7 @@ export async function hasDayPassed() {
   }
 }
 
-export async function getDBTodayLogs() {
+export async function getDBTodayLogs(name?: string) {
   const response = await fetch(`${import.meta.env.VITE_API_URL}/api/log`, {
     method: 'GET',
     headers: { 'Content-Type': 'Application/json' },
@@ -113,6 +120,22 @@ export async function getDBTodayLogs() {
     (log: { createdAt: string; task: string; log_id: number }) =>
       isToday(new Date(log.createdAt)) && log,
   )
-  console.log(finalLogs)
-  return finalLogs
+
+  let filteredLogs
+  if (name) {
+    filteredLogs = finalLogs.filter(
+      (log: { createdAt: string; task: string; log_id: number }) =>
+        // return the ones where log matches the name
+        log.task === name,
+    )
+  }
+  // this log function now returns
+  // all logs of the day and/or
+  // all the logs of the day by a name
+  // value(filteredLogs)
+  if (name) {
+    return filteredLogs
+  } else if (finalLogs) {
+    return finalLogs
+  } else return
 }
