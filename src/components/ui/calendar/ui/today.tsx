@@ -18,11 +18,11 @@ export const Today = ({
   onClickView: (name: 'year' | 'month' | 'day') => void
 }) => {
   return (
-    <article className="day-frame bg-glass-dark relative mx-auto flex w-full max-w-4xl flex-col items-center overflow-hidden rounded-2xl border-0 text-foreground shadow-2xl md:w-[75vw]">
-      <div className="flex h-[72vh] min-h-152 w-full flex-col">
+    <article className="day-frame bg-glass-dark relative mx-auto flex w-full max-w-4xl flex-col items-center overflow-hidden rounded-2xl border-0 text-foreground shadow-2xl lg:w-[75vw]">
+      <div className="flex w-full flex-col lg:h-[72vh] lg:min-h-152">
         <div className="w-full shrink-0">
-          <header className="relative items-center px-16 flex w-full bg-primary py-3 text-primary-foreground">
-            <div className="absolute left-8 items-center flex gap-1">
+          <header className="relative flex w-full flex-col items-center gap-2 bg-primary px-4 py-3 xl:flex-row xl:px-16 text-primary-foreground">
+            <div className="flex flex-wrap items-center justify-center gap-1 xl:absolute xl:left-8">
               <p className="flex gap-x-1 items-center text-xl font-semibold">
                 {weather}{' '}
                 <svg
@@ -46,9 +46,9 @@ export const Today = ({
               <span className="text-orange-300 text-xl font-bold">{city}</span>
             </div>
 
-            <h2 className="mx-auto text-center text-2xl font-semibold">{`${month} ${dayRender(date)} - Sunday`}</h2>
+            <h2 className="mx-auto text-center text-xl font-semibold sm:text-2xl">{`${month} ${dayRender(date)} - Sunday`}</h2>
 
-            <p className="absolute right-8 mx-auto text-center text-lg font-semibold">
+            <p className="mx-auto text-center text-sm font-semibold xl:absolute xl:right-8 xl:text-lg">
               IP: {<span className="text-orange-300">{ip}</span>}
             </p>
           </header>

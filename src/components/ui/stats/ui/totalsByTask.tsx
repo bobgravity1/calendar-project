@@ -54,9 +54,9 @@ export function TotalsByTask() {
   )
 
   return (
-    <Tabs defaultValue="totals" className="h-full">
-      <TabsContent value="totals" className="h-full">
-        <Card variant="glass-dark" className="h-full">
+    <Tabs defaultValue="totals" className="h-full min-w-0 w-full">
+      <TabsContent value="totals" className="h-full min-w-0 w-full">
+        <Card variant="glass-dark" className="h-full min-w-0 w-full">
           <CardHeader>
             <CardTitle>Totals by task</CardTitle>
             <CardDescription>Today, last 7 days, all time</CardDescription>
@@ -90,8 +90,8 @@ export function TotalsByTask() {
           {footer}
         </Card>
       </TabsContent>
-      <TabsContent value="edit" className="h-full">
-        <Card className="h-full">
+      <TabsContent value="edit" className="h-full min-w-0 w-full">
+        <Card className="h-full min-w-0 w-full">
           <CardHeader>
             <CardTitle variant="form">Edit goals &amp; markers</CardTitle>
           </CardHeader>

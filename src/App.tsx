@@ -1,4 +1,5 @@
 import caretRight from '@icons/caret-right.svg'
+import { ListIcon } from '@phosphor-icons/react'
 import {
   createContext,
   type JSXElementConstructor,
@@ -121,31 +122,32 @@ function App() {
   return (
     <Container bgImage={bgImage}>
       <UserContext.Provider value={contextValue}>
-        <section id="center">
-          <div className="max-w-7xl mx-auto">
+        <section id="center" className="flex min-h-svh flex-col justify-center py-4 lg:py-8">
+          <div className="mx-auto w-full max-w-7xl">
             <Sheet>
-              <div className="flex justify-between m-8 items-center gap-x-1">
-                <div className="flex gap-x-8">
+              <div className="relative mx-4 mb-6 grid grid-cols-[1fr_auto_1fr] items-center gap-y-4 lg:mx-8 lg:mb-8 lg:gap-x-1">
+                <div className="col-span-3 row-start-2 flex justify-center gap-x-2 lg:col-span-1 lg:row-start-1 lg:justify-start lg:gap-x-8">
                   {views.map((view: ViewName) => {
                     return (
                       <Button
                         key={view}
                         variant="ghost"
                         onClick={() => setUserView(view)}
-                        className="w-30 rounded-sm text-sm"
+                        className="min-w-0 flex-1 rounded-sm text-sm sm:flex-none sm:w-30"
                       >
                         {view}
                       </Button>
                     )
                   })}
                 </div>
-                <h1 className="text-center text-4xl font-bold">
+                <h1 className="col-start-2 row-start-1 text-center text-3xl font-bold lg:text-4xl">
                   {new Date().getFullYear()}
                 </h1>
                 <SheetTrigger
                   render={
-                    <Button variant="ghost" className="group w-24!">
-                      <span className="relative left-2 inline-flex items-center">
+                    <Button variant="ghost" aria-label="Open menu" className="group col-start-3 row-start-1 size-11 justify-self-end p-2 lg:h-9 lg:w-24!">
+                      <ListIcon className="size-6 lg:hidden" aria-hidden="true" />
+                      <span className="relative left-2 hidden items-center lg:inline-flex">
                         <span>Menu</span>
                         <img
                           src={caretRight}

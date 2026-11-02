@@ -9,7 +9,7 @@ export const DayFeed = () => {
   const { user, dispatch } = context
 
   return (
-    <section className="grid min-h-0 flex-1 grid-cols-2 justify-items-center gap-4 mx-6 mt-6 mb-8">
+    <section className="grid min-h-0 min-w-0 flex-1 grid-cols-1 items-stretch gap-4 mx-3 mt-4 mb-6 sm:mx-6 sm:mt-6 sm:mb-8 lg:grid-cols-2">
       <DayTable user={user} dispatch={dispatch} />
       <DayChart user={user} dispatch={dispatch} />
     </section>

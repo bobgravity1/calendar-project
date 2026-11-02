@@ -19,8 +19,8 @@ import { TotalsByTask } from './ui/totalsByTask'
 
 export const Stats = () => {
   return (
-    <section className="pb-12">
-      <div className="mx-auto grid grid-cols-3 flex-wrap gap-4 max-w-6xl mb-4">
+    <section className="px-4 pb-4 lg:px-8 lg:pb-8">
+      <div className="mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 max-w-6xl mb-4">
         <Card variant="glass-dark" className="w-full h-40 rounded-lg">
           <CardHeader>
             <CardTitle>Current streak</CardTitle>
@@ -61,11 +61,11 @@ export const Stats = () => {
             </DropdownMenu>
           </CardContent>
         </Card>
-        <Card variant="glass-dark" className="col-span-3 h-80 w-full">
+        <Card variant="glass-dark" className="h-80 w-full md:col-span-3">
           <LineChart />
         </Card>
       </div>
-      <div className="mx-auto grid grid-cols-1 gap-4 max-w-6xl md:grid-cols-2">
+      <div className="mx-auto grid grid-cols-1 gap-4 max-w-6xl lg:grid-cols-2">
         <Card variant="glass-dark">
           <CardHeader>
             <CardTitle>Activity</CardTitle>

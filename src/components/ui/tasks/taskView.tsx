@@ -83,7 +83,7 @@ export const TaskView = ({
   }
 
   return (
-    <section className="relative mx-auto grid max-w-5xl grid-cols-1 gap-4 px-4 pb-8 md:grid-cols-[1.25fr_1fr] md:px-0">
+    <section className="relative mx-auto grid max-w-5xl grid-cols-1 gap-4 px-4 pb-4 lg:grid-cols-[1.25fr_1fr] lg:px-8 lg:pb-8">
       <Card
         variant="glass-dark"
         badge={<Badge variant="primary">{user.tasks.length} tasks</Badge>}
@@ -95,7 +95,7 @@ export const TaskView = ({
         </CardHeader>
         <CardContent>
           {user.tasks.length === 0 && (
-            <div className="grid gap-2 py-8 text-center mx-16">
+            <div className="grid gap-2 py-8 text-center sm:mx-16">
               <CardTitle>No Tasks Yet</CardTitle>
               <CardDescription>
                 Create one and it shows up on every day in the calendar and will
@@ -109,7 +109,7 @@ export const TaskView = ({
                 <Card variant="glass-dark" size="sm">
                   <CardContent className="flex items-center justify-between gap-3">
                     <div className="min-w-0">
-                      <CardTitle className="flex flex-wrap items-center gap-2 text-lg font-normal">
+                      <CardTitle className="flex flex-wrap items-center gap-2 text-lg font-normal break-words">
                         {task.name}
                         {task.unit && (
                           <Badge variant="primary">{task.unit}</Badge>
