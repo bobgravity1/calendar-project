@@ -1,6 +1,6 @@
 # To do
 
-- [ ] Delete a task → delete all of its logs too
+- [X] Delete a task → delete all of its logs too
   - Either delete the logs in the delete route first, or let the database do it with a cascade on the foreign key.
     - route: `await db.delete(logTable).where(eq(logTable.task, submittedName));`
     - cascade: `references(() => taskTable.name, { onUpdate: "cascade", onDelete: "cascade" })`

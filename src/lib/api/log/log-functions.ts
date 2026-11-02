@@ -95,6 +95,12 @@ export async function hasDayPassed() {
         return { task: task_name, total: totalAmount }
       })
 
+      const filterByTask = (name: string) => {
+        totals.filter(
+          (total: { task: string; total: number }) => total.task === name,
+        )
+      }
+
       return { refresh: true, record: totals }
     } else {
       return { refresh: false, record: null }

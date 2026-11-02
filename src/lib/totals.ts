@@ -15,6 +15,8 @@ export function logTotal(logs: Log[], task: Task) {
   return { task: task.name, total }
 }
 
+// **this is the current days total, in live real time, different
+// than the daily records stored in the db for each full day
 // today's total for one task
 export function todayTotal(logs: Log[], name: string) {
   return todayLogs(logs, name).reduce((total, log) => total + log.amount, 0)
