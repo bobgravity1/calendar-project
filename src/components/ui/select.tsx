@@ -1,8 +1,8 @@
-import * as React from "react"
 import { Select as SelectPrimitive } from "@base-ui/react/select"
-import { cn } from "cn"
 import caretRight from '@icons/caret-right.svg'
 import check from '@icons/check.svg'
+import { cn } from "cn"
+import * as React from "react"
 
 const Select = SelectPrimitive.Root
 

@@ -43,4 +43,4 @@ function TabsContent({ className, ...props }: TabsPrimitive.Panel.Props) {
   return <TabsPrimitive.Panel data-slot="tabs-content" className={cn("flex-1 outline-none focus-visible:ring-2 focus-visible:ring-ring", className)} {...props} />
 }
 
-export { Tabs, TabsList, TabsTrigger, TabsContent }
+export { Tabs, TabsContent, TabsList, TabsTrigger }

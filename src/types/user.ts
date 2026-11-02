@@ -5,15 +5,23 @@ export type Task = {
   unit: string
 }
 
+export type Log = {
+  task: string
+  amount: number
+  log_id: number
+  createdAt: string
+}
+
 export type Reminder = {
-  name: string,
-  time: Date,
+  name: string
+  time: Date
   location: string
 }
 
 export type User = {
   name: string
   tasks: Task[]
+  logs: Log[]
   reminders: Reminder[]
 }
 
@@ -21,4 +29,5 @@ export type TaskAction =
   | { type: 'complete_task'; task: Task }
   | { type: 'add_task'; task: Task }
   | { type: 'delete_task'; task: Task }
-  | { type: 'edit_task', task: Task }
+  | { type: 'edit_task'; task: Task }
+  | { type: 'add_log'; log: Log }

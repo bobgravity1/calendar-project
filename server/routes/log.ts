@@ -1,8 +1,8 @@
+import { sValidator } from "@hono/standard-validator";
+import { desc } from "drizzle-orm";
 import { Hono } from "hono";
 import db from "../db/db.ts";
-import { sValidator } from "@hono/standard-validator";
 import { logTable, newLogSchema } from '../db/schemas/log.ts'
-import { desc } from "drizzle-orm";
 
 const logApp = new Hono();
 
