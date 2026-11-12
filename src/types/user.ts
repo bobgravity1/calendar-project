@@ -12,6 +12,13 @@ export type Log = {
   createdAt: string
 }
 
+export type Record = {
+  task: string
+  total: number
+  date: string
+  //   ^date meaning the date of the record, ***not the createdAt date***
+}
+
 export type Reminder = {
   name: string
   time: Date
@@ -23,6 +30,7 @@ export type User = {
   tasks: Task[]
   logs: Log[]
   reminders: Reminder[]
+  records: Record[]
 }
 
 export type TaskAction =

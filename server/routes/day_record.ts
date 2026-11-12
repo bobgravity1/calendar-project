@@ -6,14 +6,21 @@ import { dayRecordTable, recordLogSchema } from '../db/schemas/day_record.ts'
 import { format, formatDistance, sub } from 'date-fns'
 
 export const dailyRecord = new Hono()
-
 // A useful mental model is: validate first,
 //  calculate second, query third. Once you’ve
 // established that the date is valid and the type
 // is supported, the rest of the handler can proceed
 // without repeatedly checking whether those values exist.
 // NOTE FOR WHEN I RETURN. THE CONSTANT CHECKS HERE CAN BE SWEEPED EARLY ON. FIX THIS UP
-dailyRecord.get('/:type', async (c) => {
+// BEFORE: dailyRecord.get('/:type', ...)
+// AFTER:  dailyRecord.get('/range/:type', ...)
+// WHY: '/:type' and '/:name' are the same pattern — "one segment after /api/record".
+// The router can't tell them apart, so it takes the first one registered. That meant
+// /api/record/pushups hit THIS handler (type = 'pushups'), never the /:name one below.
+// A fixed prefix ('range') makes the URLs different shapes:
+//   /api/record/range/week  -> this handler
+//   /api/record/pushups     -> the /:name handler
+dailyRecord.get('/range/:type', async (c) => {
   const type_request = c.req.param('type')
   const start_request = c.req.query('start')
 
@@ -84,7 +91,6 @@ dailyRecord.get('/:name', async (c) => {
 })
 
 // use the lt and gt for a range of dates from a date!
-
 dailyRecord.post('/add', sValidator('json', recordLogSchema), async (c) => {
   const record = c.req.valid('json')
 

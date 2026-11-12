@@ -118,7 +118,9 @@ export const DayTable = ({
       <TabsContent value="reports" className="h-full">
         <Card className="h-full bg-transparent border border-white/20 text-white">
           <CardHeader>
-            <CardTitle variant="form" className="text-white">Set up scheduled reports</CardTitle>
+            <CardTitle variant="form" className="text-white">
+              Set up scheduled reports
+            </CardTitle>
           </CardHeader>
           <CardContent />
           {footer}

@@ -23,7 +23,7 @@ import {
 import { useCalendarStore } from '@/features/calendar/useCalendarState'
 import { runViewTransition } from '@/lib/view-transition'
 import useView from '@/store/useAppStore'
-import type { Log, Task, TaskAction, User } from '@/types/user'
+import type { Log, Task, TaskAction, User, Record } from '@/types/user'
 import { Stats } from './components/ui/stats/stats'
 import { TaskView } from './components/ui/tasks/taskView'
 
@@ -35,14 +35,24 @@ import {
 } from './lib/api/log/log-functions'
 import { getAllTasks } from './lib/api/task/task-functions'
 
+import {
+  writeRecord,
+  getRecordByTask,
+  getRecords,
+} from '@/lib/api/record/daily-record-functions'
+
 const dbTasks = await getAllTasks()
 const dbLogs = await getAllLogs()
+
+const records = await getRecords()
 
 const user: User = {
   name: 'Bobby',
   tasks: [...dbTasks],
   reminders: [],
   logs: [...dbLogs],
+  // null means no records yet — fall back to an empty list
+  records: records ?? [],
 }
 
 type UserTaskContext = {
@@ -122,7 +132,10 @@ function App() {
   return (
     <Container bgImage={bgImage}>
       <UserContext.Provider value={contextValue}>
-        <section id="center" className="flex min-h-svh flex-col justify-center py-4 lg:py-8">
+        <section
+          id="center"
+          className="flex min-h-svh flex-col justify-center py-4 lg:py-8"
+        >
           <div className="mx-auto w-full max-w-7xl">
             <Sheet>
               <div className="relative mx-4 mb-6 grid grid-cols-[1fr_auto_1fr] items-center gap-y-4 lg:mx-8 lg:mb-8 lg:gap-x-1">
@@ -145,8 +158,15 @@ function App() {
                 </h1>
                 <SheetTrigger
                   render={
-                    <Button variant="ghost" aria-label="Open menu" className="group col-start-3 row-start-1 size-11 justify-self-end p-2 lg:h-9 lg:w-24!">
-                      <ListIcon className="size-6 lg:hidden" aria-hidden="true" />
+                    <Button
+                      variant="ghost"
+                      aria-label="Open menu"
+                      className="group col-start-3 row-start-1 size-11 justify-self-end p-2 lg:h-9 lg:w-24!"
+                    >
+                      <ListIcon
+                        className="size-6 lg:hidden"
+                        aria-hidden="true"
+                      />
                       <span className="relative left-2 hidden items-center lg:inline-flex">
                         <span>Menu</span>
                         <img
