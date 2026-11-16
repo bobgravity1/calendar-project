@@ -4,7 +4,6 @@ import { UserContext } from "@/App";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { months, weekdays } from "@/data/dates";
 import type { MonthName } from "@/types/dates";
-import type { Task } from "@/types/user";
 import { Button } from "../../button";
 import { SelectedDayStats } from "../../stats/ui/selectedDayStats";
 

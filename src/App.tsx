@@ -1,13 +1,6 @@
 import caretRight from '@icons/caret-right.svg'
 import { ListIcon } from '@phosphor-icons/react'
-import {
-  createContext,
-  type JSXElementConstructor,
-  type ReactElement,
-  type ReactNode,
-  type ReactPortal,
-  useReducer,
-} from 'react'
+import { createContext, useReducer } from 'react'
 import bgImage from '@/assets/background/gradient.webp'
 import { Container } from '@/components/container/container'
 import { Button } from '@/components/ui/button'
@@ -29,22 +22,31 @@ import { TaskView } from './components/ui/tasks/taskView'
 
 import {
   createDBLog,
-  getAllDBLogs,
   getAllLogs,
-  getDBTodayLogs,
+  hasDayPassed,
 } from './lib/api/log/log-functions'
 import { getAllTasks } from './lib/api/task/task-functions'
 
 import {
   writeRecord,
-  getRecordByTask,
   getRecords,
 } from '@/lib/api/record/daily-record-functions'
 
 const dbTasks = await getAllTasks()
 const dbLogs = await getAllLogs()
 
-const records = await getRecords()
+const hasPassed = await hasDayPassed()
+if (hasPassed.refresh && hasPassed.record) {
+  for (const record of hasPassed?.record) {
+    try {
+      await writeRecord(record)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+}
+
+const dbRecords = await getRecords()
 
 const user: User = {
   name: 'Bobby',
@@ -52,7 +54,7 @@ const user: User = {
   reminders: [],
   logs: [...dbLogs],
   // null means no records yet — fall back to an empty list
-  records: records ?? [],
+  records: dbRecords ? [...dbRecords] : [],
 }
 
 type UserTaskContext = {
@@ -110,14 +112,6 @@ function App() {
 
       case 'add_log':
         return { ...user, logs: [...user.logs, action.log] }
-      // case "complete_task":
-      //   const matchedTask = user.tasks.map(task => {
-      //     if (task.name === action.task.name) {
-      //       return { ...task, total: Number(task.increment + task.total) }
-      //     }
-      //     return task
-      //   })
-      //   return { ...user, tasks: matchedTask }
       default: {
         return user
       }

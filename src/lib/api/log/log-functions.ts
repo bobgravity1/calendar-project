@@ -1,5 +1,5 @@
-import { isToday } from 'date-fns'
-import type { Task } from '@/types/user'
+import { isToday, isSameDay } from 'date-fns'
+import type { Log, Task } from '@/types/user'
 
 export async function createDBLog(task: Task) {
   const { increment, name } = task
@@ -83,16 +83,15 @@ export async function hasDayPassed() {
     // this is so our totals can be reset and act accordingly
     if (!isToday(new Date(createdAt))) {
       const allLogs = await getAllDBLogs()
-      // REMAINING TO DO: The function now works with one caveat: it totals all logs ever, not just the previous day's. That's the last open question before record means what you want.
-
-      // { kratom: [...logs], leg: [...logs] } => [ { task: 'kratom', total: 300 }, { task: 'leg', total: 17 } ]
       const totals = Object.entries(allLogs).map(([task_name, logs]: any) => {
-        const totalAmount = logs.reduce(
-          (total: number, log: { task: string; amount: number }) =>
-            total + log.amount,
-          0,
-        )
-        return { task: task_name, total: totalAmount }
+        const totalAmount = logs
+          .filter((log: Log) => isSameDay(createdAt, log.createdAt.toString()))
+          .reduce(
+            (total: number, log: { task: string; amount: number }) =>
+              total + log.amount,
+            0,
+          )
+        return { task: task_name, total: totalAmount, date: createdAt }
       })
 
       const filterByTask = (name: string) => {

@@ -1,9 +1,9 @@
 import { sValidator } from '@hono/standard-validator'
-import { desc, eq, and, gte, lte } from 'drizzle-orm'
+import { eq, and, gte, lte } from 'drizzle-orm'
 import { Hono } from 'hono'
 import db from '../db/db.ts'
 import { dayRecordTable, recordLogSchema } from '../db/schemas/day_record.ts'
-import { format, formatDistance, sub } from 'date-fns'
+import { sub } from 'date-fns'
 
 export const dailyRecord = new Hono()
 // A useful mental model is: validate first,

@@ -134,3 +134,23 @@ task: text().notNull().references(() => taskTable.name, {
 ```
 
 The alternative is doing it in the route, deleting the logs first and then the task. Both work, and the difference is *where the rule lives*. The route version is visible in your code. The cascade lives in the table definition and fires for every delete, including ones made in Drizzle Studio or raw SQL, so it's more reliable but invisible when you read the route. One SQLite-specific catch: changing a foreign key means rebuilding the table. `drizzle-kit push` handles it by copying the rows into a new table, but back up real data first.
+
+## Schema code is a blueprint: generate, migrate, and push
+
+Writing a table in `server/db/schemas/` changes nothing in the real database. That's why `day_record` never showed up in Drizzle Studio even though the code and a migration file both existed. Studio shows empty tables fine, so a missing table means it was never created. Drizzle Kit has three commands, and they do different jobs.
+
+`drizzle-kit generate` reads the schema and **writes a SQL file** into `drizzle/`. It never connects to the database. `drizzle-kit migrate` runs those files in order and records which ones ran in a `__drizzle_migrations` table. `drizzle-kit push` skips files entirely: it connects, compares the schema code to the live database, and runs only the difference.
+
+```sh
+npx drizzle-kit generate   # writes drizzle/<timestamp>/migration.sql, touches nothing live
+npx drizzle-kit migrate    # runs the files; fails here, because task/log were made by push and the first file tries to CREATE them again
+npx drizzle-kit push       # diffs and applies; printed only CREATE TABLE day_record, which is what we expected
+```
+
+The clue to which one this project uses: there's no `__drizzle_migrations` table, so migrate has never run. Everything was pushed. Teams use generate + migrate because the SQL files get committed, reviewed, and replayed the same way everywhere. Push is fine solo. The one rule is to pick one and stick with it, because mixing them is how a table ends up "written" but not real. Always read the SQL push prints before confirming, since it's about to run on real data.
+
+## A record's `date` versus its `createdAt`
+
+A `day_record` row carries two dates that mean different things. `date` is the day the record is *about*, the day that ended. The app sends it. `createdAt` is when the row was *written*, and the database fills it in through `$defaultFn`, which is why `recordLogSchema` only picks `task`, `total`, and `date`. Friday's record written Sunday morning has `date` = Friday and `createdAt` = Sunday.
+
+Right now `date` is the exact timestamp of the last log of that day, not midnight. The `unique(task, date)` constraint still blocks a double write, because that timestamp doesn't change until a new log exists. But asking for "Friday's records" later means a range query, not an exact match. Storing `startOfDay(...)` would make it one value per day.

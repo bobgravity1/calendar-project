@@ -1,4 +1,3 @@
-import { isToday } from 'date-fns'
 import type { Record } from '@/types/user'
 
 export const getRecordByTask = async (taskName: string, date?: string) => {

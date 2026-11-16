@@ -1,10 +1,7 @@
-import plus from '@icons/plus.svg'
-import plusToCheck from '@icons/plus-to-check.gif'
 import { XIcon } from "@phosphor-icons/react";
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "@/App";
 import { months } from "@/data/dates";
-import type { MonthName } from "@/types/dates";
 import type { Task } from "@/types/user";
 import { Button } from "../../button";
 import { PopoverClose } from "../../popover";

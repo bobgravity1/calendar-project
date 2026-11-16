@@ -1,7 +1,7 @@
 import plus from '@icons/plus.svg'
 import plusToCheck from '@icons/plus-to-check.gif'
 import { DotsThreeIcon } from '@phosphor-icons/react'
-import React, { useContext, useRef, useState } from 'react'
+import { useContext, useRef, useState } from 'react'
 import { UserContext } from '@/App'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -12,7 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import type { Log, Task } from '@/types/user'
+import type { Log, Task, Record as DayRecord } from '@/types/user'
 import {
   Card,
   CardContent,
@@ -37,6 +37,10 @@ import {
 import { getDBTodayLogs } from '@/lib/api/log/log-functions'
 import { todayTotal } from '@/lib/totals'
 
+import {
+  getRecords,
+} from '@/lib/api/record/daily-record-functions'
+
 export const TaskView = ({
   createDBLog,
 }: {
@@ -60,7 +64,12 @@ export const TaskView = ({
     dispatch({ type: 'delete_task', task })
   }
 
-  const allLogs = getDBTodayLogs()
+  const createRecord = async (record: DayRecord, taskName: string) => {
+    const logsFromToday = getDBTodayLogs(taskName)
+    await getRecords()
+  }
+
+  // const allLogs = getDBTodayLogs()
 
   const editTask = (task: Task) => {
     dispatch({ type: 'edit_task', task })
@@ -69,12 +78,18 @@ export const TaskView = ({
   const handleIncrementClick = async (task: Task) => {
     const run = ++animationRun.current
 
+    const now = new Date()
+    const lastLog = new Date(user.logs[user.logs.length - 1].createdAt)
+    if (lastLog.getDay() < now.getDay()) {
+    }
+    // const now = new Date()
+
     const newLog = await createDBLog(task)
     dispatch({ type: 'add_log', log: newLog })
 
     setClickedTasks((previous) => ({ ...previous, [task.name]: run }))
     setTimeout(() => {
-      setClickedTasks((previous) =>
+      setClickedTasks((previous: any) =>
         previous[task.name] === run
           ? { ...previous, [task.name]: 0 }
           : previous,
@@ -87,7 +102,7 @@ export const TaskView = ({
       <Card
         variant="glass-dark"
         badge={<Badge variant="primary">{user.tasks.length} tasks</Badge>}
-        className="md:min-h-[34rem]"
+        className="md:min-h-136"
       >
         <CardHeader>
           <CardTitle>Your tasks</CardTitle>

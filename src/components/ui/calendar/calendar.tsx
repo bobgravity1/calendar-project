@@ -1,6 +1,4 @@
-import { tz } from "@date-fns/tz";
 import { format, formatDistanceStrict } from "date-fns";
-import { Button } from '@/components/ui/button'
 import {
   Carousel,
   CarouselContent,
@@ -11,7 +9,6 @@ import {
 import { months } from "@/data/dates";
 import { runViewTransition } from "@/lib/view-transition";
 import type { MonthName } from "@/types/dates";
-import alignToCenter from "../../../../Align To Center.svg";
 import { personalData } from '../../../data/dates'
 import { useCalendarStore } from '../../../features/calendar/useCalendarState'
 import { Month, MonthCard } from "./ui/month";

@@ -1,4 +1,3 @@
-import { create } from 'zustand'
 
 type Reminder = {
     name: string,

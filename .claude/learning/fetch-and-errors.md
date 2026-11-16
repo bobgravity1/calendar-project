@@ -73,3 +73,25 @@ The catch that actually *does* something usually belongs to the caller. With opt
 ## `res.json()` returns `any`
 
 TypeScript can't know what a server will send, so `response.json()` is typed `any`. Your `Task` type is a promise you made about the data, and nothing checks it at runtime. That's how the `Task` type kept promising a `total` that the database rows never had, with no warning anywhere.
+
+## `.map` with async starts work, but `for...of` with `await` waits for it
+
+An `async` function returns a Promise immediately, before its fetch finishes. So `.map` over an async call just collects pending Promises and moves on. The writes do happen, but nothing waits for them, and a failure surfaces as "Uncaught (in promise)" while the app keeps loading.
+
+```ts
+hasPassed.record.map((record) => writeRecord(record))   // [Promise, Promise], nobody waits
+
+for (const record of hasPassed.record) {
+  try {
+    await writeRecord(record)   // waits for this write before starting the next one
+  } catch (err) {
+    console.log(err)            // one failed write gets logged; the loop and the app continue
+  }
+}
+```
+
+With `await` and no `try/catch`, the error from a failed write climbs up to the top-level await in `App.tsx`, and that's the blank page described above. The `try/catch` sits *inside* the loop, so each record gets its own attempt and one failure doesn't stop the rest.
+
+## What makes a 500 versus a 400
+
+A **400** here comes from `sValidator`, which rejects a badly shaped body before the route handler runs. A **500** means the handler itself threw and nothing caught it, so Hono gave up. In the record route, the `db.insert` throws if the `(task, date)` pair already exists (the unique constraint), if `task` isn't a real task name (the foreign key), or if the database can't be reached. The duplicate is the one you'll actually hit: reload on a new day before your first tap, and `hasDayPassed` says yesterday ended again and resends the same records. The constraint rejecting it is the database protecting you. The `try/catch` keeps that rejection from taking down the page.

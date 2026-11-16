@@ -102,3 +102,32 @@ const c = (logs) => { return logs.reduce((t, l) => t + l.amount, 0) } // returns
 ```
 
 **`async` always returns a Promise.** Marking a function `async` wraps whatever it returns in a Promise, even when nothing inside awaits. In a component, `{logTotal(task)}` would then try to render a Promise object, and React refuses ("Objects are not valid as a React child"). Only mark a function `async` when it actually waits for something, like a fetch. A function that adds up numbers already in memory should be plain.
+
+## `filter` and `reduce` return new values, and you have to catch them
+
+`.filter` doesn't change the array you call it on. It returns a **new** array, and if nothing stores that array, the work vanishes. This was the bug in `hasDayPassed`:
+
+```ts
+// wrong: the filtered array is thrown away, so reduce still sees every log ever
+logs.filter((log) => isSameDay(createdAt, log.createdAt))
+const totalAmount = logs.reduce((total, log) => total + log.amount, 0)
+
+// right: chain them and store the final value
+const totalAmount = logs
+  .filter((log) => isSameDay(createdAt, log.createdAt))
+  .reduce((total, log) => total + log.amount, 0)
+```
+
+Chaining fixed half of it, and then the whole chain's result wasn't assigned either. A chain returns a value just like a single call does, so it still needs a `const` in front of it.
+
+## Comparing to "now" versus comparing to a specific day
+
+`isToday(x)` is really `isSameDay(x, new Date())`, with "now" built in. That's the right question for the live task card, which shows what you've done *today*. A daily record asks a different question: which logs belong to the day that just ended? Inside `hasDayPassed` there are two `createdAt`s. One is the newest log's, from the `/latest` route, and the other is each `log.createdAt` the filter checks. Comparing each log to today always matches nothing, because that block only runs when nothing has been logged today. Comparing each log to the newest log's day catches that whole day:
+
+```ts
+// newest log = Fri. Logs: [Thu 100, Fri 100, Fri 200]
+isSameDay(new Date(), log.createdAt)  // Sun vs each → [] → total 0
+isSameDay(createdAt, log.createdAt)   // Fri vs each → [Fri 100, Fri 200] → total 300
+```
+
+It isn't "yesterday" either. If you skip Saturday, the day that needs a record on Sunday is Friday. The newest log's day handles skipped days without any special case.

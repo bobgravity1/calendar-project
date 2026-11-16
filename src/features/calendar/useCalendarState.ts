@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import type { User } from '@/types/user'
 
 type FeatureView = {
     view: 'year' | 'month' | 'day',
